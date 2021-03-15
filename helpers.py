@@ -14,8 +14,3 @@ def pbar(iterable, length=50, prefix='', suffix='', decimals=1, fill='█', prin
         printPbar(i+1)
 
     print()
-
-#  items = list(range(0, 57))
-#  import time
-#  for i in pbar(items):
-    #  time.sleep(0.1)

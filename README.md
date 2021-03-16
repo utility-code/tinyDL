@@ -27,16 +27,30 @@
 - [activations1](https://machinelearningmastery.com/weight-initialization-for-deep-learning-neural-networks/)
 
 ## Whats there so far
+### Complete training
+- Forward/backprop
+- Loss
+- Gradient Descent
 ### Basic dataloader
 - Supports multiprocessing
 - Accepts int, float, numpy arrays
 - Note : No tensors yet
-### Layers
+### Layers/Activations
+- linear
 - sigmoid
 - relu
+- prelu
+- leaky relu
+- softmax
+- softplus
+- elu
+- swish
+- tanh
 ### Progress bar
 - A progress bar generator xD (I was going to use tqdm. But well.)
 - If you have a small screen/terminal window, reduce the length parameter
+### Loss functions
+- MSE
 
 ## Requirements
 - numpy
@@ -44,7 +58,7 @@
 ## Lazy list on what to add
 - (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)
 - Avoid using hardcoded activation backward pass : aka autodiff somehow
-- All the activation functions
 - More layers
 - Type : Tensor?
 - GPU (Super long run... Probably not lol)
+- Conv xD

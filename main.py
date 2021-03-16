@@ -20,7 +20,6 @@ from layers import *
 #  x, y = next(dl)
 #  print(x.shape, y.shape)
 #
-import os
 from sklearn.datasets import make_moons
 from sklearn.model_selection import train_test_split
 N_SAMPLES = 1000
@@ -40,7 +39,11 @@ arch = [
     linear(50, 25, relu),
     linear(25, 1, sigmoid)
 ]
+pretty(arch)
 
+numEpochs = 1000
+params_values = train(np.transpose(X_train), np.transpose(y_train.reshape((sh1, 1))), arch,epochs=numEpochs, afterEvery=500)
 
-params_values = train(np.transpose(X_train), np.transpose(y_train.reshape((sh1, 1))), arch)[0]
-
+ytesthat, _ = forward(np.transpose(X_test), params_values, arch)
+testacc = accuracy(ytesthat, np.transpose(y_test.reshape((y_test.shape[0], 1))))
+print(f"Validation accuracy : {testacc}")

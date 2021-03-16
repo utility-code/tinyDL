@@ -73,6 +73,7 @@ def defaultInit(arch, seed=99):
     param_values = {}
     linearInit(arch, param_values=param_values)
     heInit(arch, param_values=param_values)
+    normalizedXavierInit(arch, param_values=param_values)
     return param_values
 
 
@@ -109,7 +110,6 @@ def singleBackward(da_curr, w_curr, b_curr, z_curr, a_prev, activation=relu):
         backact = reluBackward
 
     dzcurr = backact(da_curr, z_curr)
-    print(dzcurr)
     dwcurr = np.dot(dzcurr, a_prev.T)/m
     dbcurr = np.sum(dzcurr, axis=1, keepdims=True)/m
     daprev = np.dot(w_curr.T, dzcurr)
@@ -119,7 +119,6 @@ def singleBackward(da_curr, w_curr, b_curr, z_curr, a_prev, activation=relu):
 
 def backward(yhat, y, memory, param_values, arch):
     gradsVals = {}
-    m = y.shape[1]
     y = y.reshape(yhat.shape)
 
     daprev = - (np.divide(y, yhat) - np.divide(1-y, 1-yhat))
@@ -136,7 +135,7 @@ def backward(yhat, y, memory, param_values, arch):
         w_curr = param_values["W" + str(layer_idx)]
         b_curr = param_values["b" + str(layer_idx)]
 
-        da_prev, dw_curr, db_curr = singleBackward(
+        daprev, dw_curr, db_curr = singleBackward(
             da_curr, w_curr, b_curr, z_curr, aprev, activCurr
         )
 
@@ -155,7 +154,7 @@ def update(param_values, gradsVals, arch, lr=0.01):
     return param_values
 
 
-def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=5):
+def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=10):
     param_values = defaultInit(arch)
     losshistory = []
     acc_history = []

@@ -1,6 +1,7 @@
 import numpy as np
 from layers import *
 from helpers import pbar
+from config import *
 from loss import *
 
 # list of activation functions except sigmoid and tanh
@@ -159,7 +160,7 @@ def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery
     losshistory = []
     acc_history = []
 
-    for i in pbar(range(epochs)):
+    for i in pbar(range(epochs), length=pbarLength):
         yhat, cache = forward(x, param_values, arch)
         loss = MSELoss(yhat, y)
         losshistory.append(loss)

@@ -3,8 +3,13 @@
 - Tiny Deep learning library
 - Super WIP
 - New features will be added as time goes
+- Only needs numpy for the library
+
+## Requirements
+- numpy
 
 ## How to run
+- Configure parameters in config.py
 - python main.py
 
 ## Why?
@@ -27,6 +32,8 @@
 - [activations1](https://machinelearningmastery.com/weight-initialization-for-deep-learning-neural-networks/)
 
 ## Whats there so far
+### Unified config file
+- Okay it took me 2 minutes to add but I am proud of it
 ### Complete training
 - Forward/backprop
 - Loss
@@ -51,9 +58,6 @@
 - If you have a small screen/terminal window, reduce the length parameter
 ### Loss functions
 - MSE
-
-## Requirements
-- numpy
 
 ## Lazy list on what to add
 - (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)

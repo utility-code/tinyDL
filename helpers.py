@@ -18,5 +18,8 @@ def pbar(iterable, length=50,listofextra = [], prefix='', suffix='', decimals=1,
 
 def pretty(arch):
     print(f"Number of layers -> ", len(arch))
+    temp = ""
     for j,i in enumerate(arch):
-        print(f"{j}) {i['name']} : {i['input_dim']} -> {i['output_dim']} , {i['activation']}")
+        temp += f"{j}) {i['name']} : {i['input_dim']} -> {i['output_dim']} , {i['activation']}\n"
+    print(temp)
+    return temp

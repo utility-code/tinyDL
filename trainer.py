@@ -1,8 +1,10 @@
 import numpy as np
 from layers import *
-from helpers import pbar
+from helpers import *
 from config import *
 from loss import *
+from logger import *
+import matplotlib.pyplot as plt
 
 # list of activation functions except sigmoid and tanh
 act_layers = ["softplus", "relu", "prelu", "lrelu", "elu", "swish"]
@@ -160,6 +162,14 @@ def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery
     losshistory = []
     acc_history = []
 
+    if log == True:
+        checkifdir()
+        exp_no = getexpno()
+        print(f"Experiment number : {exp_no}")
+        exp_file = open(f"{logdir}experiment_{exp_no}.txt", "w+")
+        exp_file.write(f"Num layers: {len(arch)}\nModel: {pretty(arch)}\n\n")
+        exp_file.write("epoch,loss,accuracy\n")
+
     for i in pbar(range(epochs), length=pbarLength):
         yhat, cache = forward(x, param_values, arch)
         loss = MSELoss(yhat, y)
@@ -172,7 +182,18 @@ def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery
         )
         param_values = update(param_values, gradsVals, arch, lr)
 
+        if (log == True and i% logAfter == 0):
+            exp_file.write(f"{str(i)}, {str(loss)}, {str(acc)}\n")
+            exp_file.flush()
+
         if (i % afterEvery == 0):
             if verbose:
                 print(f"Loss : {loss} , Acc : {acc}")
+    if log == True:
+        exp_file.close()
+    if plotLoss == True:
+        plt.plot(losshistory)
+    if plotAcc == True:
+        plt.plot(acc_history)
+    plt.show()
     return param_values

@@ -7,6 +7,7 @@
 
 ## Requirements
 - numpy
+- matplotlib
 
 ## How to run
 - Configure parameters in config.py
@@ -34,6 +35,11 @@
 ## Whats there so far
 ### Unified config file
 - Okay it took me 2 minutes to add but I am proud of it
+### Experiment logging
+- Define a directory
+- It saves experiments with their losses over epochs etc
+### Plots
+- Accuracy/Loss plot
 ### Complete training
 - Forward/backprop
 - Loss

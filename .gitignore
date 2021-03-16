@@ -14,3 +14,4 @@ __pycache__/*
 *.ckpt
 *.yaml
 *.csv
+tags

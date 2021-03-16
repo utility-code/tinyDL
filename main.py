@@ -1,45 +1,46 @@
 from dataloader import *
 from trainer import *
-import numpy as np
+from helpers import *
+from layers import *
 
 
-class Dataset:
-    def __init__(self, size):
-        self.size = size
+#  class Dataset:
+#  def __init__(self, size):
+#      self.size = size
+#
+#  def __len__(self):
+#      return self.size
+#
+#  def __getitem__(self, index):
+#          return np.zeros((3, 32, 32)), 1
+#  ds = Dataset(1024)
+#  print("Created ds")
+#  dl = DataLoader(ds, num_workers=4, batch_size=64)
+#
+#  x, y = next(dl)
+#  print(x.shape, y.shape)
+#
+import os
+from sklearn.datasets import make_moons
+from sklearn.model_selection import train_test_split
+N_SAMPLES = 1000
+TEST_SIZE = .1
 
-    def __len__(self):
-        return self.size
+X, y = make_moons(n_samples = N_SAMPLES, noise=0.2, random_state=100)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=TEST_SIZE, random_state=42)
 
-    def __getitem__(self, index):
-        #  return np.zeros((3, 32, 32)), 1
-        a = [0, 0, 1, 1, 0, 0,
-             0, 1, 0, 0, 1, 0,
-             1, 1, 1, 1, 1, 1,
-             1, 0, 0, 0, 0, 1,
-             1, 0, 0, 0, 0, 1]
-        b = [0, 1, 1, 1, 1, 0,
-             0, 1, 0, 0, 1, 0,
-             0, 1, 1, 1, 1, 0,
-             0, 1, 0, 0, 1, 0,
-             0, 1, 1, 1, 1, 0]
-        c = [0, 1, 1, 1, 1, 0,
-             0, 1, 0, 0, 0, 0,
-             0, 1, 0, 0, 0, 0,
-             0, 1, 0, 0, 0, 0,
-             0, 1, 1, 1, 1, 0]
-
-        y = [[1, 0, 0],
-             [0, 1, 0],
-             [0, 0, 1]]
-        x = np.array([np.array(a).reshape(1, 30), np.array(b).reshape(1, 30),
-                      np.array(c).reshape(1, 30)])
-        y = np.array(y)
-        return x, y
+sh1 = y_train.shape[0]
+print(X.shape, y.shape)
 
 
-ds = Dataset(1024)
-print("Created ds")
-dl = DataLoader(ds, num_workers=4, batch_size=64)
+arch = [
+    linear(2, 25, relu),
+    linear(25, 50, relu),
+    linear(50, 50, relu),
+    linear(50, 25, relu),
+    linear(25, 1, sigmoid)
+]
 
-x, y = next(dl)
-print(x.shape, y.shape)
+
+params_values = train(np.transpose(X_train), np.transpose(y_train.reshape((sh1, 1))), arch)[0]
+

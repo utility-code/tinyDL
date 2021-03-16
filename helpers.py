@@ -1,12 +1,13 @@
-def pbar(iterable, length=50, prefix='', suffix='', decimals=1, fill='█', printEnd="\r"):
+def pbar(iterable, length=50,listofextra = [], prefix='', suffix='', decimals=1, fill='█', printEnd="\r"):
     total = len(iterable)
+    listofextra = " ".join(listofextra)
 
     def printPbar(iteration):
         percent = ("{0:." + str(decimals)+"f}").format(100 *
                                                        (iteration/float(total)))
         filledLength = int(length*iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
+        print(f'\r{prefix} |{bar}| {percent}% | {listofextra} {suffix}', end=printEnd)
 
     printPbar(0)
     for i, item in enumerate(iterable):
@@ -14,3 +15,8 @@ def pbar(iterable, length=50, prefix='', suffix='', decimals=1, fill='█', prin
         printPbar(i+1)
 
     print()
+
+def pretty(arch):
+    print(f"Number of layers -> ", len(arch))
+    for j,i in enumerate(arch):
+        print(f"{j}) {i['name']} : {i['input_dim']} -> {i['output_dim']} , {i['activation']}")

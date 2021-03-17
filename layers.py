@@ -1,4 +1,7 @@
 import numpy as np
+import sys
+
+# ACTIVATIONS
 
 
 def sigmoid(x):
@@ -37,11 +40,49 @@ def softmax(x):
     eX = np.exp(x - np.max(x))
     return {"value": eX/eX.sum(axis=0), "name": "softmax"}
 
+# LAYERS
 
-def linear(input_dim, output_dim, activation = relu):
-    return {"input_dim": input_dim, "output_dim": output_dim, "name": "linear", "activation":activation}
 
-# pls try to make this autodiff
+def linear(input_dim, output_dim, activation=relu):
+    return {"input_dim": input_dim, "output_dim": output_dim, "name": "linear", "activation": activation}
+
+def conv1d(image, kernel, pad = "same"):
+    return np.convolve(image, kernel, mode= pad)
+
+def conv2d(image, kernel, pad=2, stride=2):
+    # cross correlation, flip horizontally then vertically
+    kernel = np.flipud(np.fliplr(kernel))
+    xkshape, ykshape = kernel.shape
+    ximgshape, yimgshape = image.shape
+
+    xout = int(((ximgshape - xkshape + 2 * pad)/stride)+1)
+    yout = int(((yimgshape - ykshape + 2 * pad)/stride)+1)
+    output = np.zeros((xout, yout))
+
+    if pad != 0:
+        imagepadded = np.zeros(
+            (image.shape[0] + pad*2, image.shape[1] + pad*2))
+        imagepadded[int(pad):int(-1*pad), int(pad):int(-1*pad)] = image
+    else:
+        imagepadded = image
+
+    for y in range(image.shape[1]):
+        if y > image.shape[1] - ykshape:
+            break
+        if y % stride == 0:
+            for x in range(image.shape[0]):
+                if x > image.shape[0] - xkshape:
+                    break
+                try:
+                    if x % stride == 0:
+                        output[x, y] = (
+                            kernel*imagepadded[x:x+xkshape, y: y + ykshape]).sum()
+                except:
+                    break
+
+    return {"value":output, "name":"conv2d"}
+
+# Backwards : pls try to make this autodiff
 
 
 def sigmoidBackward(dx, x):

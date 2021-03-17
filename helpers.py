@@ -1,3 +1,5 @@
+import numpy as np
+
 def pbar(iterable, length=50,listofextra = [], prefix='', suffix='', decimals=1, fill='█', printEnd="\r"):
     total = len(iterable)
     listofextra = " ".join(listofextra)
@@ -23,3 +25,13 @@ def pretty(arch):
         temp += f"{j}) {i['name']} : {i['input_dim']} -> {i['output_dim']} , {i['activation']}\n"
     print(temp)
     return temp
+
+def info(arr, n = "", p = 0):
+    # get some info about an array for debugging
+    print(f"name : {n}")
+    print(f"shape : {arr.shape}")
+    print(f"count : {len(arr)}")
+    print(f"mean : {np.mean(arr)}")
+    if p==1:
+        print(arr)
+

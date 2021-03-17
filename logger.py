@@ -6,4 +6,4 @@ def checkifdir(logdir = logdir):
         os.mkdir(logdir)
 
 def getexpno(logdir = logdir):
-    return len(os.listdir(logdir)) + 1
+    return len(os.listdir(logdir)) # Offset by 1 because of .gitkeep

@@ -122,7 +122,7 @@ def singleBackward(da_curr, w_curr, b_curr, z_curr, a_prev, activation=relu):
 
 def backward(yhat, y, memory, param_values, arch):
     gradsVals = {}
-    y = y.reshape(yhat.shape)
+    #  y = y.reshape(yhat.shape)
 
     daprev = - (np.divide(y, yhat) - np.divide(1-y, 1-yhat))
 
@@ -156,8 +156,7 @@ def update(param_values, gradsVals, arch, lr=0.01):
             gradsVals["db" + str(layer_idx)]
     return param_values
 
-
-def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=10):
+def train(x,y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=10):
     param_values = defaultInit(arch)
     losshistory = []
     acc_history = []
@@ -197,3 +196,49 @@ def train(x, y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery
         plt.plot(acc_history)
     plt.show()
     return param_values
+
+
+#  def train(dl, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=10):
+#      param_values = defaultInit(arch)
+#      losshistory = []
+#      acc_history = []
+#
+#      if log == True:
+#          checkifdir()
+#          exp_no = getexpno()
+#          print(f"Experiment number : {exp_no}")
+#          exp_file = open(f"{logdir}experiment_{exp_no}.txt", "w+")
+#          exp_file.write(f"Num layers: {len(arch)}\nModel: {pretty(arch)}\n\n")
+#          exp_file.write("epoch,loss,accuracy\n")
+#
+#      for i in pbar(range(epochs), length=pbarLength):
+#          for batch in dl:
+#              x, y = batch
+#              #  info(x)
+#              #  info(y)
+#              yhat, cache = forward(x, param_values, arch)
+#              loss = MSELoss(yhat, y)
+#              losshistory.append(loss)
+#              acc = accuracy(yhat, y)
+#              acc_history.append(acc)
+#
+#              gradsVals = backward(
+#                  yhat, y, cache, param_values, arch
+#              )
+#              param_values = update(param_values, gradsVals, arch, lr)
+#
+#              if (log == True and i% logAfter == 0):
+#                  exp_file.write(f"{str(i)}, {str(loss)}, {str(acc)}\n")
+#                  exp_file.flush()
+#
+#              if (i % afterEvery == 0):
+#                  if verbose:
+#                      print(f"Loss : {loss} , Acc : {acc}")
+#      if log == True:
+#          exp_file.close()
+#      if plotLoss == True:
+#          plt.plot(losshistory)
+#      if plotAcc == True:
+#          plt.plot(acc_history)
+#      plt.show()
+#      return param_values

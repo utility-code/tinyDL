@@ -1,6 +1,6 @@
 # Train config
 lr = 0.01
-numEpochs = 1000
+numEpochs = 1
 afterEvery = 50
 testSize = .1
 verbose = True
@@ -11,6 +11,6 @@ plotLoss = False
 plotAcc = False
 
 # Logs
-log = True
+log = False
 logAfter = 10
 logdir = "./experiments/"

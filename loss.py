@@ -7,6 +7,11 @@ def MSELoss(yhat, y):
 
 #  MSELoss(np.array([1,2,3]), np.array([1,3,3]))
 
+def CELoss(yhat, y):
+    N = yhat.shape[0]
+    ce = -np.sum(y * np.log(yhat)) / N
+    return ce
+
 def identifyClassFromProb(probs):
     probs_ = np.copy(probs)
     probs_[probs_ > 0.5] = 1

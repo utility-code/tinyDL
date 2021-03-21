@@ -32,6 +32,7 @@ def info(arr, n = "", p = 0):
     print(f"shape : {arr.shape}")
     print(f"count : {len(arr)}")
     print(f"mean : {np.mean(arr)}")
+    print(f"std : {np.std(arr)}")
     if p==1:
         print(arr)
 

@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 # list of activation functions except sigmoid and tanh
 act_layers = ["softplus", "relu", "prelu", "lrelu", "elu", "swish"]
 
+def dropout(arr, p = 0.5):
+    return arr* np.random.binomial(1, p, size = arr.shape)
 
 def linearInit(arch, param_values, seed=99):
     # for linear layers
@@ -80,9 +82,14 @@ def defaultInit(arch, seed=99):
     return param_values
 
 
-def singleForward(a_prev, w_curr, b_curr, activation=relu):
+def singleForward(a_prev, w_curr, b_curr, idx_break , activation=relu):
     z_curr = np.dot(w_curr, a_prev) + b_curr
-    return activation(z_curr)["value"], z_curr
+    if layerdropout == True and idx_break!=True:
+        z_curr = dropout(z_curr, p = layerdropoutprob)
+    if activationdropout == True and idx_break != True:
+        return dropout(activation(z_curr)["value"], p = actdropoutprob), z_curr
+    else:
+        return activation(z_curr)["value"], z_curr
 
 
 def forward(x, param_values, arch):
@@ -93,8 +100,12 @@ def forward(x, param_values, arch):
         a_prev = a_curr
         w_curr = param_values["W"+str(layer_idx)]
         b_curr = param_values["b"+str(layer_idx)]
+        if idx == len(arch) - 1:
+            idx_break = True
+        else:
+            idx_break = False
         a_curr, z_curr = singleForward(
-            a_prev=a_curr, w_curr=w_curr, b_curr=b_curr)
+            a_prev=a_curr, w_curr=w_curr, b_curr=b_curr, idx_break= idx_break)
         memory["A"+str(idx)] = a_prev
         memory["Z"+str(layer_idx)] = z_curr
 
@@ -148,13 +159,31 @@ def backward(yhat, y, memory, param_values, arch):
     return gradsVals
 
 
-def update(param_values, gradsVals, arch, lr=0.01):
+def GD(param_values, gradsVals, arch, lr=0.01):
     for layer_idx, layer in enumerate(arch, 1):
         param_values["W" + str(layer_idx)] -= lr * \
             gradsVals["dW" + str(layer_idx)]
         param_values["b" + str(layer_idx)] -= lr * \
             gradsVals["db" + str(layer_idx)]
     return param_values
+
+def SGD(param_values, gradsVals, arch, lr=0.01):
+    pass
+
+def ADAM(param_values, gradsVals, arch, lr=0.01):
+    pass
+
+dict_optim = {
+    "GD" : GD,
+    "ADAM" : ADAM,
+    "SGD" : SGD,
+}
+
+dict_loss = {
+    "CE" : CELoss,
+    "MSE" : MSELoss,
+}
+
 
 def train(x,y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=10):
     param_values = defaultInit(arch)
@@ -171,7 +200,7 @@ def train(x,y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=
 
     for i in pbar(range(epochs), length=pbarLength):
         yhat, cache = forward(x, param_values, arch)
-        loss = MSELoss(yhat, y)
+        loss = dict_loss[lossfunc](yhat, y)
         losshistory.append(loss)
         acc = accuracy(yhat, y)
         acc_history.append(acc)
@@ -179,7 +208,7 @@ def train(x,y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=
         gradsVals = backward(
             yhat, y, cache, param_values, arch
         )
-        param_values = update(param_values, gradsVals, arch, lr)
+        param_values = dict_optim[optim](param_values, gradsVals, arch, lr)
 
         if (log == True and i% logAfter == 0):
             exp_file.write(f"{str(i)}, {str(loss)}, {str(acc)}\n")

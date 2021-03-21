@@ -33,6 +33,7 @@
 - Forward/backprop
 - Loss
 - Gradient Descent
+- Dropout
 ### Basic dataloader
 - WIP
 - Supports multiprocessing
@@ -62,9 +63,8 @@
 - MSE
 
 ## Lazy list on what to add
-- (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)
+- (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)j
 - conv as part of training
-- dropout
 - pooling
 - dilated conv
 - Avoid using hardcoded activation backward pass : aka autodiff somehow

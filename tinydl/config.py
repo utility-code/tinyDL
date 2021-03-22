@@ -5,6 +5,7 @@ afterEvery = 100
 testSize = .1
 verbose = True
 pbarLength = 50
+usegpu = True
 # CE, MSE
 lossfunc = "MSE"
 # GD, ADAM, SGD

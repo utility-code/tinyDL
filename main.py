@@ -1,12 +1,21 @@
-from dataloader import *
-from trainer import *
-from helpers import *
-from layers import *
-from config import *
-import numpy as np
+from tinydl.dataloader import *
+from tinydl.trainer import *
+from tinydl.helpers import *
+from tinydl.layers import *
+from tinydl.config import *
+import time
 
 from sklearn.datasets import make_moons
 from sklearn.model_selection import train_test_split
+
+if usegpu == True:
+    import cupy as np
+    print("Using GPU")
+else:
+    import numpy as np
+    print("No GPU")
+
+init_time = time.time()
 N_SAMPLES = 1000
 
 X, y = make_moons(n_samples = N_SAMPLES, noise=0.2, random_state=100)
@@ -33,3 +42,4 @@ ytesthat, _ = forward(X_test, params_values, arch)
 testacc = accuracy(ytesthat, np.transpose(y_test))
 print(f"Validation accuracy : {testacc}")
 
+print(f"Took {(time.time()-init_time)/60} minutes to run")

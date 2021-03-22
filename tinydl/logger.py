@@ -1,5 +1,5 @@
 import os
-from config import *
+from tinydl.config import *
 
 def checkifdir(logdir = logdir):
     if not os.path.isdir(logdir):

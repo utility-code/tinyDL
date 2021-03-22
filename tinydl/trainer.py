@@ -1,11 +1,14 @@
-import numpy as np
-from layers import *
-from helpers import *
-from config import *
-from loss import *
-from logger import *
+from tinydl.layers import *
+from tinydl.helpers import *
+from tinydl.config import *
+from tinydl.loss import *
+from tinydl.logger import *
 import matplotlib.pyplot as plt
 
+if usegpu == True:
+    import cupy as np
+else:
+    import numpy as np
 # list of activation functions except sigmoid and tanh
 act_layers = ["softplus", "relu", "prelu", "lrelu", "elu", "swish"]
 
@@ -83,6 +86,8 @@ def defaultInit(arch, seed=99):
 
 
 def singleForward(a_prev, w_curr, b_curr, idx_break , activation=relu):
+    if usegpu== True:
+        a_prev = np.asarray(a_prev)
     z_curr = np.dot(w_curr, a_prev) + b_curr
     if layerdropout == True and idx_break!=True:
         z_curr = dropout(z_curr, p = layerdropoutprob)
@@ -124,6 +129,8 @@ def singleBackward(da_curr, w_curr, b_curr, z_curr, a_prev, activation=relu):
         backact = reluBackward
 
     dzcurr = backact(da_curr, z_curr)
+    if usegpu == True:
+        a_prev = np.asarray(a_prev)
     dwcurr = np.dot(dzcurr, a_prev.T)/m
     dbcurr = np.sum(dzcurr, axis=1, keepdims=True)/m
     daprev = np.dot(w_curr.T, dzcurr)
@@ -134,6 +141,9 @@ def singleBackward(da_curr, w_curr, b_curr, z_curr, a_prev, activation=relu):
 def backward(yhat, y, memory, param_values, arch):
     gradsVals = {}
     #  y = y.reshape(yhat.shape)
+    if usegpu == True:
+            yhat = np.asarray(yhat)
+            y = np.asarray(y)
 
     daprev = - (np.divide(y, yhat) - np.divide(1-y, 1-yhat))
 
@@ -227,47 +237,3 @@ def train(x,y, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=
     return param_values
 
 
-#  def train(dl, arch, epochs=1, lr=0.01, verbose=True, callback=None, afterEvery=10):
-#      param_values = defaultInit(arch)
-#      losshistory = []
-#      acc_history = []
-#
-#      if log == True:
-#          checkifdir()
-#          exp_no = getexpno()
-#          print(f"Experiment number : {exp_no}")
-#          exp_file = open(f"{logdir}experiment_{exp_no}.txt", "w+")
-#          exp_file.write(f"Num layers: {len(arch)}\nModel: {pretty(arch)}\n\n")
-#          exp_file.write("epoch,loss,accuracy\n")
-#
-#      for i in pbar(range(epochs), length=pbarLength):
-#          for batch in dl:
-#              x, y = batch
-#              #  info(x)
-#              #  info(y)
-#              yhat, cache = forward(x, param_values, arch)
-#              loss = MSELoss(yhat, y)
-#              losshistory.append(loss)
-#              acc = accuracy(yhat, y)
-#              acc_history.append(acc)
-#
-#              gradsVals = backward(
-#                  yhat, y, cache, param_values, arch
-#              )
-#              param_values = update(param_values, gradsVals, arch, lr)
-#
-#              if (log == True and i% logAfter == 0):
-#                  exp_file.write(f"{str(i)}, {str(loss)}, {str(acc)}\n")
-#                  exp_file.flush()
-#
-#              if (i % afterEvery == 0):
-#                  if verbose:
-#                      print(f"Loss : {loss} , Acc : {acc}")
-#      if log == True:
-#          exp_file.close()
-#      if plotLoss == True:
-#          plt.plot(losshistory)
-#      if plotAcc == True:
-#          plt.plot(acc_history)
-#      plt.show()
-#      return param_values

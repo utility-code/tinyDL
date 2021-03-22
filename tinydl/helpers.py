@@ -1,4 +1,10 @@
-import numpy as np
+from tinydl.config import *
+if usegpu == True:
+    import cupy as np
+else:
+    import numpy as np
+
+
 
 def pbar(iterable, length=50,listofextra = [], prefix='', suffix='', decimals=1, fill='█', printEnd="\r"):
     total = len(iterable)

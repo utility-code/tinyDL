@@ -1,5 +1,9 @@
-import numpy as np
 import sys
+from tinydl.config import *
+if usegpu == True:
+    import cupy as np
+else:
+    import numpy as np
 
 # ACTIVATIONS
 
@@ -9,7 +13,7 @@ def sigmoid(x):
 
 
 def relu(x):
-    return {"value": np.maximum(0, x), "name": "relu"}
+    return {"value": np.maximum(0, x)+ 1e-12, "name": "relu"}
 
 
 def prelu(x, a):  # PRelu

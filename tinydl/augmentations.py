@@ -1,5 +1,9 @@
-import numpy as np
-from layers import *
+if usegpu == True:
+    import cupy as np
+else:
+    import numpy as np
+
+from tinydl.layers import *
 import matplotlib.pyplot as plt
 import random
 

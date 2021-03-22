@@ -1,13 +1,15 @@
 # TinyDL
 
-- Tiny Deep learning library
+- Tiny Deep learning library (+ GPU support!!!)
 - Have a look at what works so far :)
 - New features will be added as time goes
 - Only needs numpy for the library
+- If you want GPU, it replaces numpy with cupy and works :)
 
 ## Requirements
 - numpy
 - matplotlib
+- cupy (only if you want to use GPU. If not ignore)
 
 ## How to run
 - Configure parameters in config.py
@@ -29,11 +31,12 @@
 - auto increment
 ### Plots
 - Accuracy/Loss plot
+### Norm
+- Dropout
 ### Complete training
 - Forward/backprop
 - Loss
 - Gradient Descent
-- Dropout
 ### Basic dataloader
 - WIP
 - Supports multiprocessing
@@ -65,12 +68,13 @@
 ## Lazy list on what to add
 - (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)j
 - conv as part of training
+- batchnorm
+- Dropout
 - pooling
 - dilated conv
 - Avoid using hardcoded activation backward pass : aka autodiff somehow
 - More layers
 - Type : Tensor?
-- GPU (Super long run... Probably not lol)
 - Object det augmentations
 
 ## Inspired by
@@ -81,6 +85,7 @@
 
 ## References
 - The ones in Inspired by
+- [autograd](https://github.com/karpathy/micrograd)
 - [pbar](https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console)
 - [skalski](https://github.com/SkalskiP/ILearnDeepLearning.py/blob/master/01_mysteries_of_neural_networks/03_numpy_neural_net/Numpy%20deep%20neural%20network.ipynb)
 - [softmax](https://stackoverflow.com/questions/34968722/how-to-implement-the-softmax-function-in-python)

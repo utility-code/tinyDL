@@ -1,4 +1,5 @@
 from tinydl.config import *
+import os
 if usegpu == True:
     import cupy as np
 else:
@@ -25,12 +26,10 @@ def pbar(iterable, length=50,listofextra = [], prefix='', suffix='', decimals=1,
     print()
 
 def pretty(arch):
-    print(f"Number of layers -> ", len(arch))
-    temp = ""
-    for j,i in enumerate(arch):
-        temp += f"{j}) {i['name']} : {i['input_dim']} -> {i['output_dim']} , {i['activation']}\n"
-    print(temp)
-    return temp
+    print(f"No of layers: {len(arch.layers)}")
+    print(f"Number of parameters : {len(arch.parameters())}")
+    print(f"Batch size : {batchsize}")
+    print(arch)
 
 def info(arr, n = "", p = 0):
     # get some info about an array for debugging
@@ -42,3 +41,16 @@ def info(arr, n = "", p = 0):
     if p==1:
         print(arr)
 
+
+def checkifdir(logdir = logdir):
+    if not os.path.isdir(logdir):
+        os.mkdir(logdir)
+
+def getexpno(logdir = logdir):
+    return len(os.listdir(logdir)) # Offset by 1 because of .gitkeep
+
+def cuda(x):
+    if usegpu == True:
+        return np.asarray(x)
+    else:
+        return x

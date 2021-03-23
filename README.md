@@ -21,6 +21,10 @@
 - An attempt at recreating most of the essential components from scratch
 - Eventual blogs on it as well
 
+## Things you might want to change
+- Initialization : find it in trainer.py
+- Activations : find it in trainer.py
+
 ## Whats there so far
 ### Unified config file
 - Okay it took me 2 minutes to add but I am proud of it

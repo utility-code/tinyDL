@@ -10,12 +10,11 @@ def sendlosstogpu(yhat, y):
     else:
         return yhat, y
 
-def MSELoss(yhat, y):
-    pass
+def MSELoss(model, yhat, y):
 #      yhat, y = sendlosstogpu(yhat, y)
-#      s = (np.square(yhat-y))
-#      s = np.sum(s)
-#      return s
+    s = (yhat-y)**2
+    s = sum(s)
+    return s
 #
 def SVMLoss(model, yb, scores):
     losses = [(1 + -yi*scorei).relu() for yi, scorei in zip(yb, scores)]
@@ -43,8 +42,4 @@ def CELoss(yhat, y):
 #      probs_[probs_ > 0.5] = 1
 #      probs_[probs_ <= 0.5] = 0
 #      return probs_
-
-def accuracy(yb, scores):
-    yb, scores = sendlosstogpu(yb, scores)
-    return [(yi >0) == scorei.data >0 for yi, scorei in zip(yb, scores)]
 

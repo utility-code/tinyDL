@@ -1,4 +1,5 @@
 from tinydl.config import *
+import os
 if usegpu == True:
     import cupy as np
 else:
@@ -40,3 +41,10 @@ def info(arr, n = "", p = 0):
     if p==1:
         print(arr)
 
+
+def checkifdir(logdir = logdir):
+    if not os.path.isdir(logdir):
+        os.mkdir(logdir)
+
+def getexpno(logdir = logdir):
+    return len(os.listdir(logdir)) # Offset by 1 because of .gitkeep

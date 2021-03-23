@@ -10,7 +10,7 @@ usegpu = False
 batchsize = 64
 # CE, MSE, SVM
 lossfunc = "SVM"
-# ADAM, SGD
+# ADAM, SGD, GD
 optim = "SGD" 
 
 # dropout

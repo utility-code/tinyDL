@@ -20,10 +20,6 @@ actdropoutprob = .8
 layerdropout = False
 layerdropoutprob = .5 #between .5 to .8
 
-# Plots
-plotLoss = False
-plotAcc = False
-
 # Logs
 log = False
 logAfter = 10

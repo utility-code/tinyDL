@@ -87,12 +87,7 @@ def train(x,y, model, epochs = 1, lr= 0.001,bs = batchsize, verbose = True, afte
                 print(f"Loss : {total_loss.data} , Acc : {acc*100}%")
 
         for cbs in callbacks:
-            cbs(acchistory)
+            cbs(acchistory=acchistory, losshistory=losshistory,i=i)
     if log == True:
         exp_file.close()
-    if plotLoss == True:
-        plt.plot(losshistory)
-    if plotAcc == True:
-        plt.plot(acchistory)
-    plt.show()
 

@@ -35,6 +35,6 @@ pretty(arch)
 
 train(x, y, arch,epochs=numEpochs, 
       afterEvery=afterEvery, verbose = verbose,
-     callbacks = [earlystopping])
+     callbacks = [saveplots])  #earlystopping
 
 print(f"Took {(time.time()-init_time)/60} minutes to run")

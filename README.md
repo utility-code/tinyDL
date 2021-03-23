@@ -29,6 +29,10 @@
 - Define a directory
 - It saves experiments with their losses over epochs along with a representation of the model (somewhat xD)
 - auto increment
+### GPU support
+- For everything thats working
+- Define in config
+- Note that the GPU support is wonky and results arent as good. Yet. Trying to fix
 ### Plots
 - Accuracy/Loss plot
 ### Norm
@@ -67,6 +71,7 @@
 
 ## Lazy list on what to add
 - (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)j
+- Why is using GPU giving horrible results
 - conv as part of training
 - batchnorm
 - Dropout

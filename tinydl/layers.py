@@ -12,8 +12,8 @@ def sigmoid(x):
     return {"value": 1/(1+np.exp(-x)), "name": "sigmoid"}
 
 
-def relu(x):
-    return {"value": np.maximum(0, x)+ 1e-12, "name": "relu"}
+def relu(x,eps = 1e-14):
+    return {"value": np.maximum(0, x)+eps, "name": "relu"}
 
 
 def prelu(x, a):  # PRelu

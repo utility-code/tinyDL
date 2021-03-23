@@ -4,12 +4,6 @@ if usegpu == True:
 else:
     import numpy as np
 
-def sendlosstogpu(yhat, y):
-    if usegpu == True:
-        return np.asarray(yhat), np.asarray(y)
-    else:
-        return yhat, y
-
 def MSELoss(model, yhat, y):
 #      yhat, y = sendlosstogpu(yhat, y)
     s = (yhat-y)**2
@@ -25,21 +19,9 @@ def SVMLoss(model, yb, scores):
     total_loss = data_loss + reg_loss
     return total_loss
 
-def CELoss(yhat, y):
-    pass
-#
-#      yhat, y = sendlosstogpu(yhat, y)
-#
-#      N = yhat.shape[0]
-#      ce = -np.sum(y * np.log(yhat)) / N
-#      return ce
-#
-#  def identifyClassFromProb(probs):
-#      if usegpu == True:
-#          probs = np.asarray(probs)
-#
-#      probs_ = np.copy(probs)
-#      probs_[probs_ > 0.5] = 1
-#      probs_[probs_ <= 0.5] = 0
-#      return probs_
+def CELoss(model, yhat, y):
+
+    N = yhat.shape[0]
+    ce = -sum(y * np.log(yhat)) / N
+    return ce
 

@@ -1,10 +1,11 @@
 # TinyDL
 
-- Tiny Deep learning library (+ GPU support!!!)
+- Tiny Deep learning library 
 - Have a look at what works so far :)
 - New features will be added as time goes
 - Only needs numpy for the library
-- If you want GPU, it replaces numpy with cupy and works :)
+- If you want GPU, it replaces numpy with cupy. (Not fully working yet sadly)
+- Reverse AD (Thanks to micrograd xD)
 
 ## Requirements
 - numpy
@@ -42,18 +43,16 @@
 ### Norm
 - Dropout
 ### Complete training
-- Forward/backprop
-- Loss
-- Gradient Descent
-### Basic dataloader
-- WIP
-- Supports multiprocessing
-- Accepts int, float, numpy arrays
-- Note : No tensors yet
+- Forward prop
+- Tensors
+- Autodiff!!!
+- Optimizers
 ### Layers/Activations
+- (Done)
 - linear
-- sigmoid
 - relu
+- (WIP)
+- sigmoid
 - prelu
 - leaky relu
 - softmax
@@ -72,18 +71,16 @@
 - If you have a small screen/terminal window, reduce the length parameter
 ### Loss functions
 - MSE
-
+- CE
+- SVM margin
 ## Lazy list on what to add
 - (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)j
 - Why is using GPU giving horrible results
 - conv as part of training
 - batchnorm
-- Dropout
 - pooling
 - dilated conv
-- Avoid using hardcoded activation backward pass : aka autodiff somehow
 - More layers
-- Type : Tensor?
 - Object det augmentations
 
 ## Inspired by

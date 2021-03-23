@@ -137,7 +137,7 @@ class Module:
 
 class Neuron(Module):
 
-    def __init__(self, nin, nonlin='relu'):
+    def __init__(self, nin, nonlin=''):
         #  self.w = [Tensor(np.random.uniform(-1,1)) for _ in range(nin)]
         self.w = uniforminit(nin)
         self.b = Tensor(0)

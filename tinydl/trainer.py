@@ -2,6 +2,7 @@ from tinydl.layers import *
 from tinydl.helpers import *
 from tinydl.config import *
 from tinydl.loss import *
+from tinydl.callbacks import *
 import matplotlib.pyplot as plt
 
 if usegpu == True:
@@ -38,6 +39,8 @@ dict_loss = {
 
 
 def forward(x, y, model, bs = None):
+    x = cuda(x)
+    y = cuda(y)
     if bs is None:
         xb, yb = x, y
     else:
@@ -57,7 +60,7 @@ def forward(x, y, model, bs = None):
 
     return total_loss , total_acc
 
-def train(x,y, model, epochs = 1, lr= 0.001,bs = batchsize, verbose = True, afterEvery = 10):
+def train(x,y, model, epochs = 1, lr= 0.001,bs = batchsize, verbose = True, afterEvery = 10, callbacks = []):
     losshistory, acchistory = [],[]
     if log == True:
         checkifdir()
@@ -69,8 +72,8 @@ def train(x,y, model, epochs = 1, lr= 0.001,bs = batchsize, verbose = True, afte
 
     for i in pbar(range(epochs), length=pbarLength):
         total_loss, acc = forward(x,y, model,bs)
-        losshistory.append(total_loss)
-        acchistory.append(acchistory)
+        losshistory.append(total_loss.data)
+        acchistory.append(acc)
         model.zero_grad()
         total_loss.backward()
 
@@ -82,6 +85,9 @@ def train(x,y, model, epochs = 1, lr= 0.001,bs = batchsize, verbose = True, afte
         if (i % afterEvery == 0):
             if verbose:
                 print(f"Loss : {total_loss.data} , Acc : {acc*100}%")
+
+        for cbs in callbacks:
+            cbs(acchistory)
     if log == True:
         exp_file.close()
     if plotLoss == True:

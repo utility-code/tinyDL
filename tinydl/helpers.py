@@ -48,3 +48,9 @@ def checkifdir(logdir = logdir):
 
 def getexpno(logdir = logdir):
     return len(os.listdir(logdir)) # Offset by 1 because of .gitkeep
+
+def cuda(x):
+    if usegpu == True:
+        return np.asarray(x)
+    else:
+        return x

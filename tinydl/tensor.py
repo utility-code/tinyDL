@@ -389,6 +389,10 @@ class Tensor(GPUConnectMixin, GradientMixin):
         t1 = Tensor(np.zeros(self.shape, dtype=self.data.dtype))
         return self.mul(t2).sigmoid().mul(t2) - t1  # 2*sigmoid(2*x)-1
 
+    #  def softmax(self):
+    #      eX = np.exp((self - np.max(self)))
+    #      return Tensor(eX/eX.sum(axis=0))
+
     def add(self, tensor):
         """add.
         Vector Addition which adds Tensor with given Tensor.

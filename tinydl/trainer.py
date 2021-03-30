@@ -71,7 +71,7 @@ def train(X, y, model):
         # forward
         y_pred_b = list(map(model.forward, xb))
         yb = [dp.Tensor(y) for y in yb]
-        total_loss = dict_loss[lossFunction](yb, y_pred_b)
+        total_loss = dict_loss[lossFunction](y_pred_b, yb)
         lossHistory.append(total_loss.data)
         #  total_acc = accuracy(yb, y_pred_b)
         # backward
@@ -79,6 +79,7 @@ def train(X, y, model):
         total_loss.backward()
 
         if (log == True and steps % afterEvery == 0):
+            #  print(accuracy(y_pred_b, yb))
             exp_file.write(f"{str(steps)}, {str(total_loss.data)}\n")
             exp_file.flush()
 

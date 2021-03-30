@@ -27,7 +27,8 @@ numClasses = 1
 model = Net(numClasses=numClasses)
 model.summary()
 
-train_X, train_y = datasets.load_digits(return_X_y=True)
+#  train_X, train_y = datasets.load_digits(return_X_y=True)
+train_X, train_y = datasets.load_iris(return_X_y=True)
 X, y = np.asarray(train_X[:100]), np.asarray(train_y[:100])
 yi = np.argwhere(y <= 1)
 y = np.reshape(y[yi], (-1))

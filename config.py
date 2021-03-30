@@ -1,6 +1,6 @@
 # TRAINING DETAILS
 numEpochs = 100
-batch_size = 64
+batch_size = 1000
 learning_rate = 0.01
 # LOG
 log = True

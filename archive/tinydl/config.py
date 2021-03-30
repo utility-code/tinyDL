@@ -1,13 +1,13 @@
 # Train config
 lr = 0.001
-numEpochs = 1000
-afterEvery = 100
+numEpochs = 1
+afterEvery = 1
 testSize = .1
 verbose = True
 pbarLength = 50
-usegpu = True
+usegpu = False
 # CE, MSE
-lossfunc = "MSE"
+lossfunc = "CE"
 # GD, ADAM, SGD
 optim = "GD" 
 

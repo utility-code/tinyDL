@@ -1,45 +1,40 @@
-from tinydl.dataloader import *
-from tinydl.trainer import *
-from tinydl.helpers import *
-from tinydl.layers import *
-from tinydl.config import *
+from sklearn import datasets
+import numpy as np
 import time
-
-from sklearn.datasets import make_moons
-from sklearn.model_selection import train_test_split
-
-if usegpu == True:
-    import cupy as np
-    print("Using GPU")
-else:
-    import numpy as np
-    print("No GPU")
+import tinydl as dp
+from tinydl.layers import *
+from tinydl.model import Model
+from tinydl.trainer import *
 
 init_time = time.time()
-N_SAMPLES = 1000
+# Define config in config.py
 
-X, y = make_moons(n_samples = N_SAMPLES, noise=0.2, random_state=100)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=testSize, random_state=42)
+# Define model
+class Net(Model):
+    def __init__(self, numClasses):
+        super().__init__()
+        self.fc1 = Linear(4, 16, activation="relu", name="fc1")
+        self.fc2 = Linear(16, 16, activation="relu", name="fc2")
+        self.fc3 = Linear(16, numClasses, activation="sigmoid", name="fc3", init = "he")
 
-sh1 = y_train.shape[0]
-print(X.shape, y.shape)
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
+        return x
 
-X_train , y_train = np.transpose(X_train), np.transpose(y_train.reshape((sh1, 1)))
-X_test , y_test = np.transpose(X_test), np.transpose(y_test.reshape((y_test.shape[0], 1)))
+numClasses = 1
+model = Net(numClasses=numClasses)
+model.summary()
 
-arch = [
-    linear(2, 25, relu),
-    linear(25, 50, relu),
-    linear(50, 50, relu),
-    linear(50, 25, relu),
-    linear(25, 1, sigmoid)
-]
-pretty(arch)
+train_X, train_y = datasets.load_digits(return_X_y=True)
+X, y = np.asarray(train_X[:100]), np.asarray(train_y[:100])
+yi = np.argwhere(y <= 1)
+y = np.reshape(y[yi], (-1))
+X = np.reshape(X[yi], (y.shape[0], -1))
+X = (X - X.min()) / (X.max() - X.min())
+X, y = np.asarray(X, np.float32), np.asarray(y, np.float32)
 
-params_values = train(X_train, y_train, arch,epochs=numEpochs, afterEvery=afterEvery, verbose = verbose)
-
-ytesthat, _ = forward(X_test, params_values, arch)
-testacc = accuracy(ytesthat, np.transpose(y_test))
-print(f"Validation accuracy : {testacc}")
+train(X, y, model)
 
 print(f"Took {(time.time()-init_time)/60} minutes to run")

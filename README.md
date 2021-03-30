@@ -3,13 +3,12 @@
 - Tiny Deep learning library (+ GPU support!!!)
 - Have a look at what works so far :)
 - New features will be added as time goes
-- Only needs numpy for the library
-- If you want GPU, it replaces numpy with cupy and works :)
+- Only needs numpy and pycuda for the library
 
 ## Requirements
 - numpy
 - matplotlib
-- cupy (only if you want to use GPU. If not ignore)
+- pycuda  (for GPU)
 
 ## How to run
 - Configure parameters in config.py
@@ -46,12 +45,6 @@
 - linear
 - sigmoid
 - relu
-- prelu
-- leaky relu
-- softmax
-- softplus
-- elu
-- swish
 - tanh
 ### Augmentations
 - Only works for 2d images (cries)
@@ -85,6 +78,7 @@
 
 ## References
 - The ones in Inspired by
+- [training and tensor operations](https://github.com/kartik4949/deepops)
 - [autograd](https://github.com/karpathy/micrograd)
 - [pbar](https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console)
 - [skalski](https://github.com/SkalskiP/ILearnDeepLearning.py/blob/master/01_mysteries_of_neural_networks/03_numpy_neural_net/Numpy%20deep%20neural%20network.ipynb)
@@ -92,3 +86,4 @@
 - [activations1](https://machinelearningmastery.com/weight-initialization-for-deep-learning-neural-networks/)
 - [albumentations](https://albumentations.ai/docs/api_reference/)
 - [conv](https://medium.com/analytics-vidhya/2d-convolution-using-python-numpy-43442ff5f381)
+- [optim](https://github.com/ilguyi/optimizers.numpy/blob/master/02.stochastic.gradient.descent.ipynb)

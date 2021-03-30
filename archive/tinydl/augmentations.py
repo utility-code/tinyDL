@@ -16,18 +16,6 @@ def plotim(im):
     plt.axis('off')
     plt.show()
 
-#  im = np.random.rand(64, 64)
-#  l1 = np.zeros((2,3,3))
-#  l1[0, :, :] = np.array([[[-1, 0, 1],
-#                                     [-1, 0, 1],
-#                                     [-1, 0, 1]]])
-#  l1[1, :, :] = np.array([[[1,   1,  1],
-#                                     [0,   0,  0],
-#                                     [-1, -1, -1]]])
-#
-#  plotim(conv2d(im, l1)[:,:,-1])
-#
-
 
 # CenterCrop
 

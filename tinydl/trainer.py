@@ -52,6 +52,7 @@ dict_loss = {
 
 def train(X, y, model):
     lossHistory = []
+
     if log == True:
         checkifdir()
         exp_no = getexpno()
@@ -96,3 +97,4 @@ def train(X, y, model):
         plt.clf()
         plt.plot(lossHistory)
         plt.show()
+

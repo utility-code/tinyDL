@@ -36,6 +36,5 @@ X = np.reshape(X[yi], (y.shape[0], -1))
 X = (X - X.min()) / (X.max() - X.min())
 X, y = np.asarray(X, np.float32), np.asarray(y, np.float32)
 
-train(X, y, model)
-
 print(f"Took {(time.time()-init_time)/60} minutes to run")
+train(X, y, model)

@@ -72,3 +72,4 @@ class Linear:
             "shape": (self.n_inputs, self.n_out),
             "params": len(self.parameters()),
         }
+

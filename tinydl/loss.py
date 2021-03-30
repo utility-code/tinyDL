@@ -20,3 +20,4 @@ def accuracy(yhat, y):
     y = np.array([float(x.data) for x in y])
     y_hat_ = identifyClassFromProb(yhat)
     return (yhat == y).all(axis = 0).mean()
+

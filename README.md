@@ -1,9 +1,15 @@
 # TinyDL
 
-- Tiny Deep learning library (+ GPU support!!!)
+- Tiny Deep learning library 
 - Have a look at what works so far :)
 - New features will be added as time goes
+<<<<<<< HEAD
 - Only needs numpy and pycuda for the library
+=======
+- Only needs numpy for the library
+- If you want GPU, it replaces numpy with cupy. (Not fully working yet sadly)
+- Reverse AD (Thanks to micrograd xD)
+>>>>>>> 508dd746680bc19abe6951b886c53fc83bb16d2d
 
 ## Requirements
 - numpy
@@ -20,6 +26,10 @@
 - An attempt at recreating most of the essential components from scratch
 - Eventual blogs on it as well
 
+## Things you might want to change
+- Initialization : find it in trainer.py
+- Activations : find it in trainer.py
+
 ## Whats there so far
 ### Unified config file
 - Okay it took me 2 minutes to add but I am proud of it
@@ -28,23 +38,34 @@
 - Define a directory
 - It saves experiments with their losses over epochs along with a representation of the model (somewhat xD)
 - auto increment
+### GPU support
+- For everything thats working
+- Define in config
+- Note that the GPU support is wonky and results arent as good. Yet. Trying to fix
 ### Plots
 - Accuracy/Loss plot
 ### Norm
 - Dropout
 ### Complete training
-- Forward/backprop
-- Loss
-- Gradient Descent
-### Basic dataloader
-- WIP
-- Supports multiprocessing
-- Accepts int, float, numpy arrays
-- Note : No tensors yet
+- Forward prop
+- Tensors
+- Autodiff!!!
+- Optimizers
 ### Layers/Activations
+- (Done)
 - linear
-- sigmoid
 - relu
+<<<<<<< HEAD
+=======
+- (WIP)
+- sigmoid
+- prelu
+- leaky relu
+- softmax
+- softplus
+- elu
+- swish
+>>>>>>> 508dd746680bc19abe6951b886c53fc83bb16d2d
 - tanh
 ### Augmentations
 - Only works for 2d images (cries)
@@ -57,17 +78,16 @@
 - If you have a small screen/terminal window, reduce the length parameter
 ### Loss functions
 - MSE
-
+- CE
+- SVM margin
 ## Lazy list on what to add
 - (Just adding stuff here when I notice something. Not exhaustive and prone to huge changes)j
+- Why is using GPU giving horrible results
 - conv as part of training
 - batchnorm
-- Dropout
 - pooling
 - dilated conv
-- Avoid using hardcoded activation backward pass : aka autodiff somehow
 - More layers
-- Type : Tensor?
 - Object det augmentations
 
 ## Inspired by

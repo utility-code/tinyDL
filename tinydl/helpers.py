@@ -22,7 +22,6 @@ def pbar(iterable, length=50, listofextra=[], prefix='', suffix='', decimals=1, 
 
     print()
 
-
 def info(arr, n="", p=0):
     # get some info about an array for debugging
     print(f"name : {n}")

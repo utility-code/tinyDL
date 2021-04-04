@@ -1,5 +1,5 @@
 black "."
-pdoc -o docs tinydl
+pdoc --html -o docs tinydl
 mv docs/tinydl/index.html docs/index.md
 mv docs/tinydl/* docs/
 jupytext --to notebook "demo.py"

@@ -2,43 +2,19 @@ import numpy as np
 from .tensor import Tensor
 from config import *
 
-def dropout(arr, p = 0.5):
-    return arr* np.random.binomial(1, p, size = arr.shape)
-
-def linearInit(n_inputs):
-    # for linear layers
-    return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]
-
-def xavierInit(n_inputs):
-    # for activation functions, mostly for tanh
-    lower, upper = -(1.0/ np.sqrt(n_inputs)) , (1.0/(np.sqrt(n_inputs)))
-    return [Tensor(lower + np.random.randn()*(upper - lower)) for _ in range(n_inputs)]
-
-def normalizedXavierInit(n_inputs):
-    # for activation functions, mostly for tanh
-    lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (np.sqrt(6.0) / np.sqrt(n_inputs))
-    return [Tensor(lower + np.random.randn()*(upper - lower)) for _ in range(n_inputs)]
-
-def heInit(n_inputs):
-    # for activation functions, mostly for tanh
-    lower, upper = -(1.0/ np.sqrt(n_inputs)) , (1.0/(np.sqrt(n_inputs)))
-    return [Tensor(lower + np.random.randn()*(upper - lower)) for _ in range(n_inputs)]
-
-
-dict_init = {
-    "he" : heInit,
-    "xavier" : xavierInit,
-    "nxavier" : normalizedXavierInit,
-    "random" : linearInit,
-}
 
 class Node:
-    BAIS_INIT = 0.0
-
-    def __init__(self, n_inputs, activation=None, init = "random"):
-        self.w = dict_init[init](n_inputs)
+    def __init__(self, n_inputs, activation=None, init="random"):
+        self.BAIS_INIT = 0.0
         self.b = Tensor(self.BAIS_INIT)
         self.activation = activation
+        self.dict_init = {
+            "he": self.heInit,
+            "xavier": self.xavierInit,
+            "nxavier": self.normalizedXavierInit,
+            "random": self.linearInit,
+        }
+        self.w = self.dict_init[init](n_inputs)
 
     def __call__(self, x):
         _act = (wi * xi for wi, xi in zip(self.w, x))
@@ -50,6 +26,36 @@ class Node:
 
     def params(self):
         return self.w + [self.b]
+
+    def dropout(self, arr, p=0.5):
+        return arr * np.random.binomial(1, p, size=arr.shape)
+
+    def linearInit(self, n_inputs):
+        # for linear layers
+        return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]
+
+    def xavierInit(self, n_inputs):
+        # for activation functions, mostly for tanh
+        lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
+        return [
+            Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
+        ]
+
+    def normalizedXavierInit(self, n_inputs):
+        # for activation functions, mostly for tanh
+        lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (
+            np.sqrt(6.0) / np.sqrt(n_inputs)
+        )
+        return [
+            Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
+        ]
+
+    def heInit(self, n_inputs):
+        # for activation functions, mostly for tanh
+        lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
+        return [
+            Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
+        ]
 
 
 class Linear:
@@ -72,4 +78,3 @@ class Linear:
             "shape": (self.n_inputs, self.n_out),
             "params": len(self.parameters()),
         }
-

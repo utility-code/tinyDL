@@ -50,4 +50,4 @@ class Model(metaclass=ABCMeta):
             out_shape = summary["shape"][1]
             params = summary["params"]
             _format_summary += f"\n{name}: {in_shape} -> {out_shape}"
-        print(_format_summary+"\n------\n\n")
+        print(_format_summary + "\n------\n\n")

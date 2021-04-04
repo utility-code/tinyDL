@@ -13,7 +13,7 @@ imtest = plt.imread("/home/eragon/Pictures/Wallpaper/drag.jpg")
 def plotim(im):
     print(im.shape)
     plt.imshow(im)
-    plt.axis('off')
+    plt.axis("off")
     plt.show()
 
 
@@ -32,6 +32,7 @@ def plotim(im):
 # Flip
 def flip(im):
     return np.flip(im, random.choice([x for x in range(len(im.shape))]))
+
 
 #  plotim(flip(imtest))
 # GridDistortion
@@ -86,12 +87,11 @@ def flip(im):
 
 
 def blur(im):
-    k = np.array([
-        [0.0625, 0.125, 0.0625],
-        [0.125, 0.25, 0.125],
-        [0.0625, 0.125, 0.0625]]
+    k = np.array(
+        [[0.0625, 0.125, 0.0625], [0.125, 0.25, 0.125], [0.0625, 0.125, 0.0625]]
     )
     return conv2d(im[:, :, -1], k, pad=2)
+
 
 # CLAHE
 
@@ -161,10 +161,10 @@ def blur(im):
 
 
 def sharpen(im):
-    k = np.array(
-        [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
-    )
+    k = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
     return conv2d(im[:, :, -1], k, pad=2)
+
+
 # Solarize
 
 # Superpixels

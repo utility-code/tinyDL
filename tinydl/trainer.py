@@ -14,27 +14,27 @@ def GD(step, model, learning_rate, vw, vw2):
 
 def GDM(step, model, learning_rate, vw, vw2):
     for p in model.parameters():
-        p._data += (momentum*vw - learning_rate * p.grad)
+        p._data += momentum * vw - learning_rate * p.grad
 
 
 def NGD(step, model, learning_rate, vw, vw2):
     for p in model.parameters():
-        p._data += (momentum*vw - learning_rate * p.grad)
+        p._data += momentum * vw - learning_rate * p.grad
 
 
 def RMSProp(step, model, learning_rate, vw, vw2):
     for p in model.parameters():
-        vw = decay*vw + (1. - decay) * p.grad**2
-        p._data -= (learning_rate * p.grad / (np.sqrt(vw) + eps))
+        vw = decay * vw + (1.0 - decay) * p.grad ** 2
+        p._data -= learning_rate * p.grad / (np.sqrt(vw) + eps)
 
 
 def ADAM(step, model, learning_rate, vw, vw2):
     for p in model.parameters():
-        vw = beta1 * vw + (1. - beta1) * p.grad
-        vw2 = beta2*vw2 + (1. - beta2) * p.grad**2
-        vwUnbiased = vw / (1. - beta1**(step+1))
-        vw2Unbiased = vw2 / (1. - beta2**(step+1))
-        p._data -= (learning_rate * vwUnbiased / (np.sqrt(vw2Unbiased) + eps))
+        vw = beta1 * vw + (1.0 - beta1) * p.grad
+        vw2 = beta2 * vw2 + (1.0 - beta2) * p.grad ** 2
+        vwUnbiased = vw / (1.0 - beta1 ** (step + 1))
+        vw2Unbiased = vw2 / (1.0 - beta2 ** (step + 1))
+        p._data -= learning_rate * vwUnbiased / (np.sqrt(vw2Unbiased) + eps)
 
 
 dict_optim = {
@@ -79,7 +79,7 @@ def train(X, y, model):
         model.init_backward()
         total_loss.backward()
 
-        if (log == True and steps % afterEvery == 0):
+        if log == True and steps % afterEvery == 0:
             #  print(accuracy(y_pred_b, yb))
             exp_file.write(f"{str(steps)}, {str(total_loss.data)}\n")
             exp_file.flush()
@@ -97,4 +97,3 @@ def train(X, y, model):
         plt.clf()
         plt.plot(lossHistory)
         plt.show()
-

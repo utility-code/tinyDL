@@ -3,24 +3,35 @@ import os
 from config import *
 import pickle
 
-def pbar(iterable, length=50, listofextra=[], prefix='', suffix='', decimals=1, fill='█', printEnd="\r"):
+
+def pbar(
+    iterable,
+    length=50,
+    listofextra=[],
+    prefix="",
+    suffix="",
+    decimals=1,
+    fill="█",
+    printEnd="\r",
+):
     total = len(iterable)
     listofextra = " ".join(listofextra)
 
     def printPbar(iteration):
-        percent = ("{0:." + str(decimals)+"f}").format(100 *
-                                                       (iteration/float(total)))
-        filledLength = int(length*iteration // total)
-        bar = fill * filledLength + '-' * (length - filledLength)
-        print(
-            f'\r{prefix} |{bar}| {percent}% | {listofextra} {suffix}', end=printEnd)
+        percent = ("{0:." + str(decimals) + "f}").format(
+            100 * (iteration / float(total))
+        )
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + "-" * (length - filledLength)
+        print(f"\r{prefix} |{bar}| {percent}% | {listofextra} {suffix}", end=printEnd)
 
     printPbar(0)
     for i, item in enumerate(iterable):
         yield item
-        printPbar(i+1)
+        printPbar(i + 1)
 
     print()
+
 
 def info(arr, n="", p=0):
     # get some info about an array for debugging
@@ -32,16 +43,22 @@ def info(arr, n="", p=0):
     if p == 1:
         print(arr)
 
-def checkifdir(logdir = logdir):
+
+def checkifdir(logdir=logdir):
     if not os.path.isdir(logdir):
         os.mkdir(logdir)
 
-def getexpno(logdir = logdir):
-    return len(os.listdir(logdir)) # Offset by 1 because of .gitkeep
+
+def getexpno(logdir=logdir):
+    return len(os.listdir(logdir))  # Offset by 1 because of .gitkeep
+
 
 def savemodel(model, total_loss):
     with open("model.pkl", "wb+") as f:
-        pickle.dump({
-            "parameters": [x.data for x in model.parameters()],
-            "loss": total_loss.data,
-        }, f)
+        pickle.dump(
+            {
+                "parameters": [x.data for x in model.parameters()],
+                "loss": total_loss.data,
+            },
+            f,
+        )

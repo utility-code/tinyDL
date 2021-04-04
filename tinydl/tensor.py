@@ -129,8 +129,7 @@ transpose = None  # kernel.transpose_kernel()
 arithmetic = kernel.arithmetic_kernel
 
 
-ops = {"+": operator.add, "-": operator.sub,
-       "*": operator.mul, "/": operator.truediv}
+ops = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 
 
 class GPUConnectMixin:
@@ -327,8 +326,7 @@ class Tensor(GPUConnectMixin, GradientMixin):
         Args:
             name (str): name of device
         """
-        assert name.startswith("cpu") or name.startswith(
-            "gpu"), "Wrong Device!!"
+        assert name.startswith("cpu") or name.startswith("gpu"), "Wrong Device!!"
         # set precision to float32.
         assert (
             self.dtype == np.float32
@@ -460,8 +458,7 @@ class Tensor(GPUConnectMixin, GradientMixin):
         N = max(self.shape)
         blockDim = (self.BLOCKSIZE, 1, 1)
         gridDim = (self._idiv(N, self.BLOCKSIZE), 1, 1)
-        _vec_kernel = self.get_kernel(
-            arithmetic(operation), "device_arithmetic")
+        _vec_kernel = self.get_kernel(arithmetic(operation), "device_arithmetic")
         _vec_kernel(
             ret,
             self._data,

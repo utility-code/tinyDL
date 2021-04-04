@@ -5,6 +5,7 @@ import numpy as np
 
 # Layers
 
+
 class Node:
     BAIS_INIT = 0.0
 
@@ -51,19 +52,19 @@ class Dense:
 
 
 def sigmoid(x):
-    return {"value": 1/(1+np.exp(-x)), "name": "sigmoid"}
+    return {"value": 1 / (1 + np.exp(-x)), "name": "sigmoid"}
 
 
 def relu(x):
-    return {"value": np.maximum(0, x)+ 1e-12, "name": "relu"}
+    return {"value": np.maximum(0, x) + 1e-12, "name": "relu"}
 
 
 def prelu(x, a):  # PRelu
-    return {"value": np.maximum(0, x*a), "name": "prelu"}
+    return {"value": np.maximum(0, x * a), "name": "prelu"}
 
 
 def lrelu(x, alpha):  # leaky relu
-    return {"value": np.maximum(alpha*x, x), "name": "lrelu"}
+    return {"value": np.maximum(alpha * x, x), "name": "lrelu"}
 
 
 def softplus(x):
@@ -71,20 +72,24 @@ def softplus(x):
 
 
 def elu(x, a):
-    return {"value": np.maximum(x, a*(np.exp(x)-1)), "name": "elu"}
+    return {"value": np.maximum(x, a * (np.exp(x) - 1)), "name": "elu"}
 
 
 def swish(x, beta):
-    return {"value": x/(1+np.exp(-beta*x)), "name": "swish"}
+    return {"value": x / (1 + np.exp(-beta * x)), "name": "swish"}
 
 
 def tanh(x):
-    return {"value": (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x)), "name": "tanh"}
+    return {
+        "value": (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x)),
+        "name": "tanh",
+    }
 
 
 def softmax(x):
     eX = np.exp(x - np.max(x))
-    return {"value": eX/eX.sum(axis=0), "name": "softmax"}
+    return {"value": eX / eX.sum(axis=0), "name": "softmax"}
+
 
 # LAYERS
 

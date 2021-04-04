@@ -3,13 +3,7 @@
 - Tiny Deep learning library 
 - Have a look at what works so far :)
 - New features will be added as time goes
-<<<<<<< HEAD
 - Only needs numpy and pycuda for the library
-=======
-- Only needs numpy for the library
-- If you want GPU, it replaces numpy with cupy. (Not fully working yet sadly)
-- Reverse AD (Thanks to micrograd xD)
->>>>>>> 508dd746680bc19abe6951b886c53fc83bb16d2d
 
 ## Requirements
 - numpy
@@ -55,8 +49,6 @@
 - (Done)
 - linear
 - relu
-<<<<<<< HEAD
-=======
 - (WIP)
 - sigmoid
 - prelu
@@ -65,7 +57,6 @@
 - softplus
 - elu
 - swish
->>>>>>> 508dd746680bc19abe6951b886c53fc83bb16d2d
 - tanh
 ### Augmentations
 - Only works for 2d images (cries)

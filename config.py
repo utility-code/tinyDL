@@ -10,8 +10,8 @@ afterEvery = 10
 # PLOTS
 plotLoss = False
 
-#LOSS
-# MSE, 
+# LOSS
+# MSE,
 lossFunction = "MSE"
 
 # OPTIMIZER
@@ -21,13 +21,13 @@ optimizer = "ADAM"
 #  optimizer = "GD"
 
 # GDM, NGD
-momentum = .9 
+momentum = 0.9
 
 # RMS Prop
 #  decay = .9
 #  eps = 1e-10
 
 # ADAM
-beta1 = .9
-beta2 = .999
+beta1 = 0.9
+beta2 = 0.999
 eps = 1e-8

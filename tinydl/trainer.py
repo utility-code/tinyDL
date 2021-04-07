@@ -8,27 +8,79 @@ import tinydl as dp
 
 
 def GD(step, model, learning_rate, vw, vw2):
+    """[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    gradient descent optimizer
+    """
     for p in model.parameters():
         p._data -= learning_rate * p.grad
 
 
 def GDM(step, model, learning_rate, vw, vw2):
+    """[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    Gradient descent optimizer with momentum
+
+    """
     for p in model.parameters():
         p._data += momentum * vw - learning_rate * p.grad
 
 
 def NGD(step, model, learning_rate, vw, vw2):
+    """[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    gradient descent optimizer with Nesterov momentum
+
+    """
     for p in model.parameters():
         p._data += momentum * vw - learning_rate * p.grad
 
 
 def RMSProp(step, model, learning_rate, vw, vw2):
+    """[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    RMSProp Optimizer
+    """
     for p in model.parameters():
         vw = decay * vw + (1.0 - decay) * p.grad ** 2
         p._data -= learning_rate * p.grad / (np.sqrt(vw) + eps)
 
 
 def ADAM(step, model, learning_rate, vw, vw2):
+    """[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    ADAM Optimizer
+    """
     for p in model.parameters():
         vw = beta1 * vw + (1.0 - beta1) * p.grad
         vw2 = beta2 * vw2 + (1.0 - beta2) * p.grad ** 2
@@ -51,6 +103,14 @@ dict_loss = {
 
 
 def train(X, y, model):
+    """[summary]
+
+    Args:
+        X ([type]): [description]
+        y ([type]): [description]
+        model ([type]): [description]
+    Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
+    """
     lossHistory = []
 
     if log == True:

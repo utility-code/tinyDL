@@ -36,27 +36,79 @@ import tinydl as dp
 
 
 def GD(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    gradient descent optimizer
+    &#34;&#34;&#34;
     for p in model.parameters():
         p._data -= learning_rate * p.grad
 
 
 def GDM(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    Gradient descent optimizer with momentum
+
+    &#34;&#34;&#34;
     for p in model.parameters():
         p._data += momentum * vw - learning_rate * p.grad
 
 
 def NGD(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    gradient descent optimizer with Nesterov momentum
+
+    &#34;&#34;&#34;
     for p in model.parameters():
         p._data += momentum * vw - learning_rate * p.grad
 
 
 def RMSProp(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    RMSProp Optimizer
+    &#34;&#34;&#34;
     for p in model.parameters():
         vw = decay * vw + (1.0 - decay) * p.grad ** 2
         p._data -= learning_rate * p.grad / (np.sqrt(vw) + eps)
 
 
 def ADAM(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    ADAM Optimizer
+    &#34;&#34;&#34;
     for p in model.parameters():
         vw = beta1 * vw + (1.0 - beta1) * p.grad
         vw2 = beta2 * vw2 + (1.0 - beta2) * p.grad ** 2
@@ -79,6 +131,14 @@ dict_loss = {
 
 
 def train(X, y, model):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        X ([type]): [description]
+        y ([type]): [description]
+        model ([type]): [description]
+    Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
+    &#34;&#34;&#34;
     lossHistory = []
 
     if log == True:
@@ -138,12 +198,36 @@ def train(X, y, model):
 <span>def <span class="ident">ADAM</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>ADAM Optimizer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def ADAM(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    ADAM Optimizer
+    &#34;&#34;&#34;
     for p in model.parameters():
         vw = beta1 * vw + (1.0 - beta1) * p.grad
         vw2 = beta2 * vw2 + (1.0 - beta2) * p.grad ** 2
@@ -156,12 +240,36 @@ def train(X, y, model):
 <span>def <span class="ident">GD</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>gradient descent optimizer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def GD(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    gradient descent optimizer
+    &#34;&#34;&#34;
     for p in model.parameters():
         p._data -= learning_rate * p.grad</code></pre>
 </details>
@@ -170,12 +278,37 @@ def train(X, y, model):
 <span>def <span class="ident">GDM</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Gradient descent optimizer with momentum</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def GDM(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    Gradient descent optimizer with momentum
+
+    &#34;&#34;&#34;
     for p in model.parameters():
         p._data += momentum * vw - learning_rate * p.grad</code></pre>
 </details>
@@ -184,12 +317,37 @@ def train(X, y, model):
 <span>def <span class="ident">NGD</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>gradient descent optimizer with Nesterov momentum</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def NGD(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    gradient descent optimizer with Nesterov momentum
+
+    &#34;&#34;&#34;
     for p in model.parameters():
         p._data += momentum * vw - learning_rate * p.grad</code></pre>
 </details>
@@ -198,12 +356,36 @@ def train(X, y, model):
 <span>def <span class="ident">RMSProp</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>RMSProp Optimizer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def RMSProp(step, model, learning_rate, vw, vw2):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        step ([type]): [description]
+        model ([type]): [description]
+        learning_rate ([type]): [description]
+        vw ([type]): [description]
+        vw2 ([type]): [description]
+    RMSProp Optimizer
+    &#34;&#34;&#34;
     for p in model.parameters():
         vw = decay * vw + (1.0 - decay) * p.grad ** 2
         p._data -= learning_rate * p.grad / (np.sqrt(vw) + eps)</code></pre>
@@ -213,12 +395,30 @@ def train(X, y, model):
 <span>def <span class="ident">train</span></span>(<span>X, y, model)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>X</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def train(X, y, model):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        X ([type]): [description]
+        y ([type]): [description]
+        model ([type]): [description]
+    Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
+    &#34;&#34;&#34;
     lossHistory = []
 
     if log == True:

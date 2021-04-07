@@ -4,6 +4,10 @@ from config import *
 
 
 class Node:
+    """[summary]
+    Defines a Node class. This contains a linear node
+    """
+
     def __init__(self, n_inputs, activation=None, init="random"):
         self.BAIS_INIT = 0.0
         self.b = Tensor(self.BAIS_INIT)
@@ -28,21 +32,55 @@ class Node:
         return self.w + [self.b]
 
     def dropout(self, arr, p=0.5):
+        """[summary]
+
+        Args:
+            arr ([type]): [description]
+            p (float, optional): [description]. Defaults to 0.5.
+
+        Returns:
+            [type]: [description]
+        Simple dropout
+        """
         return arr * np.random.binomial(1, p, size=arr.shape)
 
     def linearInit(self, n_inputs):
-        # for linear layers
+        """[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Uniform random initialization
+        """
         return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]
 
     def xavierInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        """[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Xavier/He initialization
+        """
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
         return [
             Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
         ]
 
     def normalizedXavierInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        """[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Normalized Xavier initialization
+        """
         lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (
             np.sqrt(6.0) / np.sqrt(n_inputs)
         )
@@ -51,7 +89,15 @@ class Node:
         ]
 
     def heInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        """[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        He initialization
+        """
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
         return [
             Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
@@ -59,6 +105,10 @@ class Node:
 
 
 class Linear:
+    """[summary]
+    Defines the linear layer
+    """
+
     def __init__(self, n_inputs, n_out, name=None, **kwargs):
         self.nodes = [Node(n_inputs, **kwargs) for _ in range(n_out)]
         self.name = name
@@ -73,6 +123,12 @@ class Linear:
         return [p for n in self.nodes for p in n.params()]
 
     def summary(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        Shows a tiny model structure defination
+        """
         return {
             "name": self.name,
             "shape": (self.n_inputs, self.n_out),

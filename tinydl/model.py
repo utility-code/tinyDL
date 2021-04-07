@@ -6,6 +6,13 @@ from .layers import Linear, Node
 
 
 class Model(metaclass=ABCMeta):
+    """[summary]
+
+    Args:
+        metaclass ([type], optional): [description]. Defaults to ABCMeta.
+    Creates a model with GPU support and backwards/forward prop
+    """
+
     def __init__(self, *args, **kargs):
         self._total_params = 0
 
@@ -40,7 +47,9 @@ class Model(metaclass=ABCMeta):
         return params
 
     def summary(self):
-        # bad coding :(
+        """[summary]
+        Pretty print model anyone?
+        """
         _modules = self.modules
         _format_summary = "Model summary\n------"
         for key, mod in enumerate(_modules):

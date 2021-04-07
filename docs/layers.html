@@ -32,6 +32,10 @@ from config import *
 
 
 class Node:
+    &#34;&#34;&#34;[summary]
+    Defines a Node class. This contains a linear node
+    &#34;&#34;&#34;
+
     def __init__(self, n_inputs, activation=None, init=&#34;random&#34;):
         self.BAIS_INIT = 0.0
         self.b = Tensor(self.BAIS_INIT)
@@ -56,21 +60,55 @@ class Node:
         return self.w + [self.b]
 
     def dropout(self, arr, p=0.5):
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            arr ([type]): [description]
+            p (float, optional): [description]. Defaults to 0.5.
+
+        Returns:
+            [type]: [description]
+        Simple dropout
+        &#34;&#34;&#34;
         return arr * np.random.binomial(1, p, size=arr.shape)
 
     def linearInit(self, n_inputs):
-        # for linear layers
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Uniform random initialization
+        &#34;&#34;&#34;
         return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]
 
     def xavierInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Xavier/He initialization
+        &#34;&#34;&#34;
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
         return [
             Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
         ]
 
     def normalizedXavierInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Normalized Xavier initialization
+        &#34;&#34;&#34;
         lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (
             np.sqrt(6.0) / np.sqrt(n_inputs)
         )
@@ -79,7 +117,15 @@ class Node:
         ]
 
     def heInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        He initialization
+        &#34;&#34;&#34;
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
         return [
             Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
@@ -87,6 +133,10 @@ class Node:
 
 
 class Linear:
+    &#34;&#34;&#34;[summary]
+    Defines the linear layer
+    &#34;&#34;&#34;
+
     def __init__(self, n_inputs, n_out, name=None, **kwargs):
         self.nodes = [Node(n_inputs, **kwargs) for _ in range(n_out)]
         self.name = name
@@ -101,6 +151,12 @@ class Linear:
         return [p for n in self.nodes for p in n.params()]
 
     def summary(self):
+        &#34;&#34;&#34;[summary]
+
+        Returns:
+            [type]: [description]
+        Shows a tiny model structure defination
+        &#34;&#34;&#34;
         return {
             &#34;name&#34;: self.name,
             &#34;shape&#34;: (self.n_inputs, self.n_out),
@@ -122,12 +178,17 @@ class Linear:
 <span>(</span><span>n_inputs, n_out, name=None, **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]
+Defines the linear layer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Linear:
+    &#34;&#34;&#34;[summary]
+    Defines the linear layer
+    &#34;&#34;&#34;
+
     def __init__(self, n_inputs, n_out, name=None, **kwargs):
         self.nodes = [Node(n_inputs, **kwargs) for _ in range(n_out)]
         self.name = name
@@ -142,6 +203,12 @@ class Linear:
         return [p for n in self.nodes for p in n.params()]
 
     def summary(self):
+        &#34;&#34;&#34;[summary]
+
+        Returns:
+            [type]: [description]
+        Shows a tiny model structure defination
+        &#34;&#34;&#34;
         return {
             &#34;name&#34;: self.name,
             &#34;shape&#34;: (self.n_inputs, self.n_out),
@@ -167,12 +234,24 @@ class Linear:
 <span>def <span class="ident">summary</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Shows a tiny model structure defination</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def summary(self):
+    &#34;&#34;&#34;[summary]
+
+    Returns:
+        [type]: [description]
+    Shows a tiny model structure defination
+    &#34;&#34;&#34;
     return {
         &#34;name&#34;: self.name,
         &#34;shape&#34;: (self.n_inputs, self.n_out),
@@ -187,12 +266,17 @@ class Linear:
 <span>(</span><span>n_inputs, activation=None, init='random')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]
+Defines a Node class. This contains a linear node</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Node:
+    &#34;&#34;&#34;[summary]
+    Defines a Node class. This contains a linear node
+    &#34;&#34;&#34;
+
     def __init__(self, n_inputs, activation=None, init=&#34;random&#34;):
         self.BAIS_INIT = 0.0
         self.b = Tensor(self.BAIS_INIT)
@@ -217,21 +301,55 @@ class Linear:
         return self.w + [self.b]
 
     def dropout(self, arr, p=0.5):
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            arr ([type]): [description]
+            p (float, optional): [description]. Defaults to 0.5.
+
+        Returns:
+            [type]: [description]
+        Simple dropout
+        &#34;&#34;&#34;
         return arr * np.random.binomial(1, p, size=arr.shape)
 
     def linearInit(self, n_inputs):
-        # for linear layers
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Uniform random initialization
+        &#34;&#34;&#34;
         return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]
 
     def xavierInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Xavier/He initialization
+        &#34;&#34;&#34;
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
         return [
             Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
         ]
 
     def normalizedXavierInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        Normalized Xavier initialization
+        &#34;&#34;&#34;
         lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (
             np.sqrt(6.0) / np.sqrt(n_inputs)
         )
@@ -240,7 +358,15 @@ class Linear:
         ]
 
     def heInit(self, n_inputs):
-        # for activation functions, mostly for tanh
+        &#34;&#34;&#34;[summary]
+
+        Args:
+            n_inputs ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        He initialization
+        &#34;&#34;&#34;
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
         return [
             Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
@@ -252,12 +378,35 @@ class Linear:
 <span>def <span class="ident">dropout</span></span>(<span>self, arr, p=0.5)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>arr</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+<dt><strong><code>p</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>[description]. Defaults to 0.5.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Simple dropout</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def dropout(self, arr, p=0.5):
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        arr ([type]): [description]
+        p (float, optional): [description]. Defaults to 0.5.
+
+    Returns:
+        [type]: [description]
+    Simple dropout
+    &#34;&#34;&#34;
     return arr * np.random.binomial(1, p, size=arr.shape)</code></pre>
 </details>
 </dd>
@@ -265,13 +414,32 @@ class Linear:
 <span>def <span class="ident">heInit</span></span>(<span>self, n_inputs)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_inputs</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>He initialization</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def heInit(self, n_inputs):
-    # for activation functions, mostly for tanh
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        n_inputs ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    He initialization
+    &#34;&#34;&#34;
     lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
     return [
         Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)
@@ -282,13 +450,32 @@ class Linear:
 <span>def <span class="ident">linearInit</span></span>(<span>self, n_inputs)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_inputs</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Uniform random initialization</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def linearInit(self, n_inputs):
-    # for linear layers
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        n_inputs ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    Uniform random initialization
+    &#34;&#34;&#34;
     return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]</code></pre>
 </details>
 </dd>
@@ -296,13 +483,32 @@ class Linear:
 <span>def <span class="ident">normalizedXavierInit</span></span>(<span>self, n_inputs)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_inputs</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Normalized Xavier initialization</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def normalizedXavierInit(self, n_inputs):
-    # for activation functions, mostly for tanh
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        n_inputs ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    Normalized Xavier initialization
+    &#34;&#34;&#34;
     lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (
         np.sqrt(6.0) / np.sqrt(n_inputs)
     )
@@ -328,13 +534,32 @@ class Linear:
 <span>def <span class="ident">xavierInit</span></span>(<span>self, n_inputs)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>[summary]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_inputs</code></strong> :&ensp;<code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>[type]</code></dt>
+<dd>[description]</dd>
+</dl>
+<p>Xavier/He initialization</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def xavierInit(self, n_inputs):
-    # for activation functions, mostly for tanh
+    &#34;&#34;&#34;[summary]
+
+    Args:
+        n_inputs ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    Xavier/He initialization
+    &#34;&#34;&#34;
     lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
     return [
         Tensor(lower + np.random.randn() * (upper - lower)) for _ in range(n_inputs)

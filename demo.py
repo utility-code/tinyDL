@@ -1,12 +1,10 @@
 # # Importing the libraries
 
 # %%
-from sklearn import datasets
-import numpy as np
 import time
-import tinydl as dp
 from tinydl.layers import *
 from tinydl.model import Model
+from tinydl.data import *
 from tinydl.trainer import *
 
 init_time = time.time()
@@ -18,7 +16,7 @@ init_time = time.time()
 class Net(Model):
     def __init__(self, numClasses):
         super().__init__()
-        self.fc1 = Linear(4, 16, activation="relu", name="fc1")
+        self.fc1 = Linear(13, 16, activation="relu", name="fc1")
         self.fc2 = Linear(16, 32, activation="relu", name="fc2")
         self.fc3 = Linear(32, 16, activation="relu", name="fc2")
         self.fc4 = Linear(16, numClasses, activation="sigmoid", name="fc3", init="he")
@@ -36,18 +34,25 @@ model = Net(numClasses=numClasses)
 model.summary()
 # -
 
-# # Loading the data
+# # Loading the data manually
 
-train_X, train_y = datasets.load_iris(return_X_y=True)
-X, y = np.asarray(train_X[:100]), np.asarray(train_y[:100])
-yi = np.argwhere(y <= 1)
-y = np.reshape(y[yi], (-1))
-X = np.reshape(X[yi], (y.shape[0], -1))
-X = (X - X.min()) / (X.max() - X.min())
-X, y = np.asarray(X, np.float32), np.asarray(y, np.float32)
+#  train_X, train_y = datasets.load_iris(return_X_y=True)
+#  X, y = np.asarray(train_X[:100]), np.asarray(train_y[:100])
+#  yi = np.argwhere(y <= 1)
+#  y = np.reshape(y[yi], (-1))
+#  X = np.reshape(X[yi], (y.shape[0], -1))
+#  X = (X - X.min()) / (X.max() - X.min())
+#  X, y = np.asarray(X, np.float32), np.asarray(y, np.float32)
 
+# Loading the data using helpers
+
+fpath = "/media/hdd/Datasets/heart.csv"
+
+trainX, trainy, testX, testy = DataFrameClassification(
+    fpath, label_col="target", max_rows=100
+).read_data()
 
 # # Training loop
 
-train(X, y, model)
+train(trainX, trainy, model)
 print(f"Took {(time.time()-init_time)/60} minutes to run")

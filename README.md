@@ -10,6 +10,7 @@
 - numpy
 - matplotlib
 - pycuda  (for GPU)
+- pandas (if you are using the helpers and need to read a table)
 
 ## How to run
 - Install the requirements

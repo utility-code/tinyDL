@@ -19,7 +19,6 @@ def pbar(
     printEnd="\r",
 ):
     """[summary]
-
     Args:
         iterable ([type]): [description]
         length (int, optional): [description]. Defaults to 50. Change if you have a big/small screen.
@@ -29,10 +28,8 @@ def pbar(
         decimals (int, optional): [description]. Defaults to 1.
         fill (str, optional): [description]. Defaults to "█". Change if you want a different block
         printEnd (str, optional): [description]. Defaults to "\r".
-
     Yields:
         [type]: [description]
-
     Custom progress bar.
     """
     total = len(iterable)
@@ -56,7 +53,6 @@ def pbar(
 
 def info(arr, n="", p=0):
     """[summary]
-
     Args:
         arr ([type]): [description]
         n (str, optional): [description]. Defaults to "".
@@ -74,7 +70,6 @@ def info(arr, n="", p=0):
 
 def checkifdir(logdir=logdir):
     """[summary]
-
     Args:
         logdir ([type], optional): [description]. Defaults to logdir.
     Check if the directory exists
@@ -85,10 +80,8 @@ def checkifdir(logdir=logdir):
 
 def getexpno(logdir=logdir):
     """[summary]
-
     Args:
         logdir ([type], optional): [description]. Defaults to logdir.
-
     Returns:
         [type]: [description]
     Return the current experiment number
@@ -98,7 +91,6 @@ def getexpno(logdir=logdir):
 
 def savemodel(model, total_loss):
     """[summary]
-
     Args:
         model ([type]): [description]
         total_loss ([type]): [description]

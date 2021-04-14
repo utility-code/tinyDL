@@ -4,7 +4,7 @@ from tinydl.loss import *
 import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
-import tinydl as dp
+import tinydl as td
 
 
 def GD(step, model, learning_rate, vw, vw2):
@@ -126,15 +126,19 @@ def train(X, y, model):
         ri = np.random.permutation(X.shape[0])[:batch_size]
         xb = X[ri]
         yb = y[ri]
-        xb = [list(map(dp.Tensor, x)) for x in xb]
+        xb = [list(map(td.Tensor, x)) for x in xb]
         vw = 0.0
         vw2 = 0.0
         # forward
         y_pred_b = list(map(model.forward, xb))
-        yb = [dp.Tensor(y) for y in yb]
-        total_loss = dict_loss[lossFunction](y_pred_b, yb)
+        yb = [td.Tensor(y) for y in yb]
+        #  total_loss = dict_loss[lossFunction](y_pred_b, yb)
+        total_loss = getattr(td.loss, lossFunction)(y_pred_b, yb)
         lossHistory.append(total_loss.data)
-        #  total_acc = accuracy(yb, y_pred_b)
+
+        # accuracy
+        print("Train Accuracy ", getattr(td.loss, accuracy_metric)(y_pred_b, yb))
+
         # backward
         model.init_backward()
         total_loss.backward()

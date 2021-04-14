@@ -1,18 +1,19 @@
 # TRAINING DETAILS
-numEpochs = 100
+numEpochs = 10
 batch_size = 1000
 learning_rate = 0.01
+accuracy_metric = "accuracy"
 # LOG
 log = True
 logdir = "./experiments/"
-afterEvery = 10
+afterEvery = 1
 
 # PLOTS
 plotLoss = False
 
 # LOSS
 # MSE,
-lossFunction = "MSE"
+lossFunction = "MSELoss"
 
 # OPTIMIZER
 

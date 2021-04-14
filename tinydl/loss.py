@@ -1,13 +1,14 @@
 from tinydl.tensor import *
 import numpy as np
 import tinydl as dp
+from sklearn.metrics import log_loss
 
 """[summary]
 This module has some loss functions and accuracy metrics implemented.
 """
 
 
-def MSELoss(yb, ypred):
+def MSELoss(ypred, yb):
     """[summary]
 
     Args:
@@ -16,11 +17,30 @@ def MSELoss(yb, ypred):
 
     Returns:
         [type]: [description]
-    Mean squared Error
+    Mean squared Error Loss
     """
     _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
 
     return sum(_loss) * dp.Tensor(1 / len(yb))
+
+
+def BCELoss(ypred, yb):  # DOESNT WORK YET
+    """[summary]
+
+    Args:
+        yb ([type]): [description]
+        ypred ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    Binary Cross Entropy Loss
+    """
+    ce = sum(ypred) * dp.Tensor(1 / len(yb))
+
+    return ce
+    #  ypred = [float(x._data) for x in ypred]
+    #  yb = [float(x._data) for x in yb]
+    #  return dp.Tensor(log_loss(yb, ypred))
 
 
 def identifyClassFromProb(probs_):
@@ -43,4 +63,5 @@ def accuracy(yhat, y):
     yhat = np.array([float(x.data) for x in yhat])
     y = np.array([float(x.data) for x in y])
     y_hat_ = identifyClassFromProb(yhat)
-    return (yhat == y).all(axis=0).mean()
+    #  return (yhat == y).all(axis=0).mean()
+    return (y_hat_ == y).mean()

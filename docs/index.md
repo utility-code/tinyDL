@@ -46,6 +46,10 @@ from .tensor import Tensor as Tensor</code></pre>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="tinydl.data" href="data.html">tinydl.data</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="tinydl.helpers" href="helpers.html">tinydl.helpers</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -87,6 +91,7 @@ from .tensor import Tensor as Tensor</code></pre>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="tinydl.data" href="data.html">tinydl.data</a></code></li>
 <li><code><a title="tinydl.helpers" href="helpers.html">tinydl.helpers</a></code></li>
 <li><code><a title="tinydl.layers" href="layers.html">tinydl.layers</a></code></li>
 <li><code><a title="tinydl.loss" href="loss.html">tinydl.loss</a></code></li>

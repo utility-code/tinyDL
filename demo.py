@@ -1,6 +1,5 @@
-# # Importing the libraries
-
 # %%
+# Importing the libraries
 import time
 from tinydl.layers import *
 from tinydl.model import Model
@@ -9,10 +8,8 @@ from tinydl.trainer import *
 
 init_time = time.time()
 
-
-# # Defining the Network
-
-# +
+# %%
+# Defining the Network
 class Net(Model):
     def __init__(self, numClasses):
         super().__init__()
@@ -32,10 +29,10 @@ class Net(Model):
 numClasses = 1
 model = Net(numClasses=numClasses)
 model.summary()
-# -
 
-# # Loading the data manually
-
+# %%
+# Loading the data manually from sklearn
+#  from sklearn import datasets
 #  train_X, train_y = datasets.load_iris(return_X_y=True)
 #  X, y = np.asarray(train_X[:100]), np.asarray(train_y[:100])
 #  yi = np.argwhere(y <= 1)
@@ -44,7 +41,8 @@ model.summary()
 #  X = (X - X.min()) / (X.max() - X.min())
 #  X, y = np.asarray(X, np.float32), np.asarray(y, np.float32)
 
-# Loading the data using helpers
+# %%
+# Loading an external dataframe using helpers
 
 fpath = "/media/hdd/Datasets/heart.csv"
 
@@ -52,7 +50,9 @@ trainX, trainy, testX, testy = DataFrameClassification(
     fpath, label_col="target", max_rows=100
 ).read_data()
 
-# # Training loop
-
+# %%
+# Training loop
 train(trainX, trainy, model)
+
+# %%
 print(f"Took {(time.time()-init_time)/60} minutes to run")

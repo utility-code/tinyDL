@@ -2,6 +2,7 @@
 
 - Tiny Deep learning library 
 - [DOCUMENTATION](https://subhadityamukherjee.github.io/tinyDL/)
+- Check the demo.py or the demo notebook!!! (same content)
 - Have a look at what works so far :)
 - New features will be added as time goes
 - Only needs numpy and pycuda for the library
@@ -15,7 +16,6 @@
 ## How to run
 - Install the requirements
 - Configure parameters in config.py
-- Check the demo.py or the demo notebook
 - python demo.py
 
 ## Why?
@@ -30,8 +30,16 @@
 - [teddykokker](https://github.com/teddykoker/tinyloader)
 - ft. Every attempt of me trying this in other languages and failing miserably ):
 
+## What are the .sh files
+- I am lazy. So I write code when I have to do the same things again and again.
+### pusher.sh
+- Formats all the code using "Black" formatter
+- Creates documentation from docstrings in the code using pandoc
+- Fixes the documentation paths for working with Github Pages
+- Takes the demo.py and pops it into a nice notebook for anyone to run and use
+- If an argument is given, it git commits with the message and pushes it to the repository
+
 ## References
-- The ones in Inspired by
 - [training and tensor operations](https://github.com/kartik4949/deepops)
 - [autograd](https://github.com/karpathy/micrograd)
 - [pbar](https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console)
@@ -41,3 +49,4 @@
 - [albumentations](https://albumentations.ai/docs/api_reference/)
 - [conv](https://medium.com/analytics-vidhya/2d-convolution-using-python-numpy-43442ff5f381)
 - [optim](https://github.com/ilguyi/optimizers.numpy/blob/master/02.stochastic.gradient.descent.ipynb)
+- Countless stackoverflow searches (hehe)

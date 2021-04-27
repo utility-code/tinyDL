@@ -34,10 +34,10 @@ from .layers import Linear, Node
 
 
 class Model(metaclass=ABCMeta):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        metaclass ([type], optional): [description]. Defaults to ABCMeta.
+        metaclass . Defaults to ABCMeta.
     Creates a model with GPU support and backwards/forward prop
     &#34;&#34;&#34;
 
@@ -75,7 +75,7 @@ class Model(metaclass=ABCMeta):
         return params
 
     def summary(self):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;
         Pretty print model anyone?
         &#34;&#34;&#34;
         _modules = self.modules
@@ -104,22 +104,18 @@ class Model(metaclass=ABCMeta):
 <span>(</span><span>*args, **kargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>metaclass</code></strong> :&ensp;<code>[type]</code>, optional</dt>
-<dd>[description]. Defaults to ABCMeta.</dd>
-</dl>
-<p>Creates a model with GPU support and backwards/forward prop</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>metaclass . Defaults to ABCMeta.
+Creates a model with GPU support and backwards/forward prop</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Model(metaclass=ABCMeta):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        metaclass ([type], optional): [description]. Defaults to ABCMeta.
+        metaclass . Defaults to ABCMeta.
     Creates a model with GPU support and backwards/forward prop
     &#34;&#34;&#34;
 
@@ -157,7 +153,7 @@ class Model(metaclass=ABCMeta):
         return params
 
     def summary(self):
-        &#34;&#34;&#34;[summary]
+        &#34;&#34;&#34;
         Pretty print model anyone?
         &#34;&#34;&#34;
         _modules = self.modules
@@ -249,14 +245,13 @@ def forward(self, *args, **kwargs):
 <span>def <span class="ident">summary</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]
-Pretty print model anyone?</p></div>
+<div class="desc"><p>Pretty print model anyone?</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def summary(self):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Pretty print model anyone?
     &#34;&#34;&#34;
     _modules = self.modules

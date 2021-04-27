@@ -19,10 +19,10 @@
 - padding
 - conv2d
 - resume training
-- image dataloader
 
 ## Done
 
 - Metrics
 - pooling layers
 - Fix documentation
+- image dataloader

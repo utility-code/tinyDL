@@ -5,6 +5,7 @@ from pathlib import Path
 import cv2
 from tinydl.augmentation import *
 
+
 class DataFrameClassification:
     """
 
@@ -66,7 +67,7 @@ class ImageFolderClassification:
         - img1
         - img2
         - ....
-    
+
     - class2
         - img1
         - img2
@@ -79,7 +80,7 @@ class ImageFolderClassification:
         max_entries=None,
         train_pct=0.8,
         image_shape=(64, 64),
-        aug = [Normalize]
+        aug=[Normalize],
     ):
         self.fpath = Path(fpath)
         self.train_pct = train_pct
@@ -97,9 +98,7 @@ class ImageFolderClassification:
             X_images.append(cv2.resize(cv2.imread(str(im)), self.image_shape))
         X_images = np.array(X_images)
 
-        X_images = augment(X_images,
-                           self.image_shape,
-                           self.aug)
+        X_images = augment(X_images, self.image_shape, self.aug)
         return X_images
 
     def read_data(self):
@@ -108,8 +107,9 @@ class ImageFolderClassification:
         self.label_dict = {classes[x].name: x for x in range(len(classes))}
         print(f"\nLabels : {self.label_dict}")
         all_files = pd.DataFrame(
-            [x for x in self.fpath.glob("*/*.png")], columns=["path"])
-        all_files['label'] = all_files["path"].apply(self.labelFromMap)
+            [x for x in self.fpath.glob("*/*.png")], columns=["path"]
+        )
+        all_files["label"] = all_files["path"].apply(self.labelFromMap)
 
         X, y = all_files["path"], all_files["label"]
         trainX = X.sample(frac=self.train_pct)
@@ -120,9 +120,8 @@ class ImageFolderClassification:
 
         print("Done loading data")
         return (
-                    trainX,
-                    trainy.to_numpy(dtype="float64"),
-                    testX,
-                    testy.to_numpy(dtype="float64"),
-                )
-
+            trainX,
+            trainy.to_numpy(dtype="float64"),
+            testX,
+            testy.to_numpy(dtype="float64"),
+        )

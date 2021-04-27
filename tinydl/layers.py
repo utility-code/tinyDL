@@ -4,6 +4,7 @@ from .tensor import Tensor
 from config import *
 import tinydl as dp
 
+
 class Node:
     """
     Defines a Node class. This contains a linear node
@@ -36,11 +37,11 @@ class Node:
         """
 
         Args:
-            arr 
+            arr
             p (float, optional): . Defaults to 0.5.
 
         Returns:
-            
+
         Simple dropout
         """
         return arr * np.random.binomial(1, p, size=arr.shape)
@@ -49,10 +50,10 @@ class Node:
         """
 
         Args:
-            n_inputs 
+            n_inputs
 
         Returns:
-            
+
         Uniform random initialization
         """
         return [Tensor(np.random.uniform(-1, 1)) for _ in range(n_inputs)]
@@ -61,10 +62,10 @@ class Node:
         """
 
         Args:
-            n_inputs 
+            n_inputs
 
         Returns:
-            
+
         Xavier/He initialization
         """
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
@@ -76,10 +77,10 @@ class Node:
         """
 
         Args:
-            n_inputs 
+            n_inputs
 
         Returns:
-            
+
         Normalized Xavier initialization
         """
         lower, upper = -(np.sqrt(6.0) / np.sqrt(n_inputs)), (
@@ -93,10 +94,10 @@ class Node:
         """
 
         Args:
-            n_inputs 
+            n_inputs
 
         Returns:
-            
+
         He initialization
         """
         lower, upper = -(1.0 / np.sqrt(n_inputs)), (1.0 / (np.sqrt(n_inputs)))
@@ -127,7 +128,7 @@ class Linear:
         """
 
         Returns:
-            
+
         Shows a tiny model structure defination
         """
         return {
@@ -135,6 +136,7 @@ class Linear:
             "shape": (self.n_inputs, self.n_out),
             "params": len(self.parameters()),
         }
+
 
 #  def conv2d(image, kernel, padding=0, strides=1):
 #      kernel = np.flipud(np.fliplr(kernel))
@@ -176,17 +178,25 @@ def maxpool(feature_map, size=2, stride=2):
     Max pool output
     """
     feature_map = tensorToArray(feature_map)
-    pool_out = np.zeros((np.uint16((feature_map.shape[0]-size+1)/stride),np.uint16((feature_map.shape[1]-size+1)/stride),feature_map.shape[-1]))
+    pool_out = np.zeros(
+        (
+            np.uint16((feature_map.shape[0] - size + 1) / stride),
+            np.uint16((feature_map.shape[1] - size + 1) / stride),
+            feature_map.shape[-1],
+        )
+    )
     for map_num in range(feature_map.shape[-1]):
         r2 = 0
-        for r in np.arange(0, feature_map.shape[0]-size-1, stride):
+        for r in np.arange(0, feature_map.shape[0] - size - 1, stride):
             c2 = 0
-            for c in np.arange(0, feature_map.shape[1]-size-1, stride):
+            for c in np.arange(0, feature_map.shape[1] - size - 1, stride):
                 pool_out[r2, c2, map_num] = np.max(
-                    feature_map[r:r+size,  c:c+size])
+                    feature_map[r : r + size, c : c + size]
+                )
                 c2 = c2 + 1
             r2 = r2 + 1
     return pool_out
+
 
 def minpool(feature_map, size=2, stride=2):
     """
@@ -198,17 +208,25 @@ def minpool(feature_map, size=2, stride=2):
     Min pool output
     """
     feature_map = tensorToArray(feature_map)
-    pool_out = np.zeros((np.uint16((feature_map.shape[0]-size+1)/stride),np.uint16((feature_map.shape[1]-size+1)/stride),feature_map.shape[-1]))
+    pool_out = np.zeros(
+        (
+            np.uint16((feature_map.shape[0] - size + 1) / stride),
+            np.uint16((feature_map.shape[1] - size + 1) / stride),
+            feature_map.shape[-1],
+        )
+    )
     for map_num in range(feature_map.shape[-1]):
         r2 = 0
-        for r in np.arange(0, feature_map.shape[0]-size-1, stride):
+        for r in np.arange(0, feature_map.shape[0] - size - 1, stride):
             c2 = 0
-            for c in np.arange(0, feature_map.shape[1]-size-1, stride):
+            for c in np.arange(0, feature_map.shape[1] - size - 1, stride):
                 pool_out[r2, c2, map_num] = np.min(
-                    feature_map[r:r+size,  c:c+size])
+                    feature_map[r : r + size, c : c + size]
+                )
                 c2 = c2 + 1
             r2 = r2 + 1
     return pool_out
+
 
 def avgpool(feature_map, size=2, stride=2):
     """
@@ -220,14 +238,30 @@ def avgpool(feature_map, size=2, stride=2):
     Avg pool output
     """
     feature_map = tensorToArray(feature_map)
-    pool_out = np.zeros((np.uint16((feature_map.shape[0]-size+1)/stride),np.uint16((feature_map.shape[1]-size+1)/stride),feature_map.shape[-1]))
+    pool_out = np.zeros(
+        (
+            np.uint16((feature_map.shape[0] - size + 1) / stride),
+            np.uint16((feature_map.shape[1] - size + 1) / stride),
+            feature_map.shape[-1],
+        )
+    )
     for map_num in range(feature_map.shape[-1]):
         r2 = 0
-        for r in np.arange(0, feature_map.shape[0]-size-1, stride):
+        for r in np.arange(0, feature_map.shape[0] - size - 1, stride):
             c2 = 0
-            for c in np.arange(0, feature_map.shape[1]-size-1, stride):
+            for c in np.arange(0, feature_map.shape[1] - size - 1, stride):
                 pool_out[r2, c2, map_num] = np.average(
-                    feature_map[r:r+size,  c:c+size])
+                    feature_map[r : r + size, c : c + size]
+                )
                 c2 = c2 + 1
             r2 = r2 + 1
     return pool_out
+
+
+def flatten(arr):
+    return arrayToTensor(np.ndarray.flatten(arr))
+
+
+def pool(arr, mode="max", axis=1):
+    arr = getattr(np, mode)(arr, axis=axis)
+    return arr

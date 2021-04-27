@@ -277,7 +277,6 @@ class Tensor(GPUConnectMixin, GradientMixin):
         Detach state.
         """
         self.state = TensorState.DETACH
-        # TODO(kartik4949) : Write ME.
         return Tensor(self._data)
 
     @property
@@ -491,8 +490,8 @@ class Tensor(GPUConnectMixin, GradientMixin):
     def __radd__(self, tensor):
         return self + tensor
 
-    def __abs__(self): #WIP
-        return self if self.data >0.0 else self*-1
+    def __abs__(self):  # WIP
+        return self if self.data > 0.0 else self * -1
 
     def __mul__(self, tensor):
         return self.mul(tensor)

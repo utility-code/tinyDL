@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def augment(X_images, image_shape, aug_list):
     """
     Args:
@@ -13,9 +14,10 @@ def augment(X_images, image_shape, aug_list):
         X_images = augs(X_images)
     return X_images
 
+
 def Normalize(X_images):
     """
-    Args: 
+    Args:
         image array
     Normalizes the image
     """

@@ -2,6 +2,7 @@ from tinydl.tensor import *
 import numpy as np
 import tinydl as dp
 from tinydl.helpers import arrayToTensor, tensorToArray
+import pysnooper as snp
 
 """
 This module has some loss functions and accuracy metrics implemented.
@@ -12,60 +13,68 @@ def MSELoss(yb, ypred):
     """
 
     Args:
-        yb 
-        ypred 
+        yb
+        ypred
 
     Returns:
-        
+
     Mean squared Error Loss
     """
-    _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+    try:
+        _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+    except AttributeError:
+        ypred = tensorToArray(ypred)
+        yb = arrayToTensor(yb)
+        _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+
     return sum(_loss) * dp.Tensor(1 / len(yb))
 
-def MAELoss(yb, ypred): #WIP
+
+def MAELoss(yb, ypred):  # WIP
     """
 
     Args:
-        yb 
-        ypred 
+        yb
+        ypred
 
     Returns:
-        
+
     Mean Absolute Error Loss
     """
     yb = tensorToArray(yb)
     ypred = tensorToArray(ypred)
-    diff = arrayToTensor(np.abs(yb-ypred))
-    return sum(diff) * dp.Tensor(1/len(yb))
+    diff = arrayToTensor(np.abs(yb - ypred))
+    return sum(diff) * dp.Tensor(1 / len(yb))
 
-def CrossEntropyLoss(yb, ypred): #WIP
+
+def CrossEntropyLoss(yb, ypred):  # WIP
     """
 
     Args:
-        yb 
-        ypred 
+        yb
+        ypred
 
     Returns:
-        
+
     Cross Entropy Loss
     """
     #  yb = tensorToArray(yb)
     #  ypred = tensorToArray(ypred)
     eps = np.finfo(float).eps
 
-    ce=  yb*(np.log(ypred+eps))
+    ce = yb * (np.log(ypred + eps))
     return dp.Tensor(-np.sum(ce))
 
 
-def MeanLogCoshLoss(yb, ypred): #WIP
+def MeanLogCoshLoss(yb, ypred):  # WIP
     """
 
     Args:
-        yb 
-        ypred 
+        yb
+        ypred
 
     Returns:
-        
+
     Mean Absolute Error Loss
     """
     yb = tensorToArray(yb)
@@ -74,15 +83,15 @@ def MeanLogCoshLoss(yb, ypred): #WIP
     return dp.Tensor(np.mean(diff))
 
 
-def MeanHellingerLoss(yb, ypred): #WIP
+def MeanHellingerLoss(yb, ypred):  # WIP
     """
 
     Args:
-        yb 
-        ypred 
+        yb
+        ypred
 
     Returns:
-        
+
     Mean Hellinger Loss
     """
     yb = tensorToArray(yb)
@@ -91,12 +100,12 @@ def MeanHellingerLoss(yb, ypred): #WIP
     return dp.Tensor(np.mean(diff))
 
 
-def MeanIOUScore(yb, ypred): #WIP
+def MeanIOUScore(yb, ypred):  # WIP
     """
 
     Args:
-        yb 
-        ypred 
+        yb
+        ypred
 
     Mean IOU Loss
     """
@@ -105,8 +114,8 @@ def MeanIOUScore(yb, ypred): #WIP
 
     uniqueLabels = set(yb.ravel())
     numUnique = len(uniqueLabels)
-    I = np.empty(shape=(numUnique, ), dtype=float)
-    U = np.empty(shape=(numUnique, ), dtype=float)
+    I = np.empty(shape=(numUnique,), dtype=float)
+    U = np.empty(shape=(numUnique,), dtype=float)
 
     for i, val in enumerate(uniqueLabels):
         predI = ypred == val
@@ -115,7 +124,7 @@ def MeanIOUScore(yb, ypred): #WIP
         I[i] = np.sum(np.logical_and(lblI, predI))
         U[i] = np.sum(np.logical_or(lblI, predI))
 
-    return dp.Tensor(np.mean(I/U))
+    return dp.Tensor(np.mean(I / U))
 
 
 def identifyClassFromProb(probs_):
@@ -128,15 +137,16 @@ def identifyClassFromProb(probs_):
     return probs_
 
 
-def blank(yhat, y): return dp.Tensor(0.0)
+def blank(yhat, y):
+    return dp.Tensor(0.0)
 
 
 def accuracy(yb, ypred):
     """
 
     Args:
-        yhat 
-        y 
+        yhat
+        y
 
     Returns the accuracy
     """
@@ -144,4 +154,7 @@ def accuracy(yb, ypred):
     ypred = tensorToArray(ypred)
     y_hat_ = identifyClassFromProb(ypred)
     yb = tensorToArray(yb)
-    return np.equal(y_hat_, yb).sum()
+    if yb.shape[-1] == 3:
+        pass
+    elif len(yb.shape) == 1:
+        return np.equal(y_hat_, yb).sum()

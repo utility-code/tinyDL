@@ -29,70 +29,163 @@
 <pre><code class="python">from tinydl.tensor import *
 import numpy as np
 import tinydl as dp
-from sklearn.metrics import log_loss
+from tinydl.helpers import arrayToTensor, tensorToArray
+import pysnooper as snp
 
-&#34;&#34;&#34;[summary]
+&#34;&#34;&#34;
 This module has some loss functions and accuracy metrics implemented.
 &#34;&#34;&#34;
 
 
-def MSELoss(ypred, yb):
-    &#34;&#34;&#34;[summary]
+def MSELoss(yb, ypred):
+    &#34;&#34;&#34;
 
     Args:
-        yb ([type]): [description]
-        ypred ([type]): [description]
+        yb
+        ypred
 
     Returns:
-        [type]: [description]
+
     Mean squared Error Loss
     &#34;&#34;&#34;
-    _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+    try:
+        _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+    except AttributeError:
+        ypred = tensorToArray(ypred)
+        yb = arrayToTensor(yb)
+        _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
 
     return sum(_loss) * dp.Tensor(1 / len(yb))
 
 
-def BCELoss(ypred, yb):  # DOESNT WORK YET
-    &#34;&#34;&#34;[summary]
+def MAELoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
 
     Args:
-        yb ([type]): [description]
-        ypred ([type]): [description]
+        yb
+        ypred
 
     Returns:
-        [type]: [description]
-    Binary Cross Entropy Loss
-    &#34;&#34;&#34;
-    ce = sum(ypred) * dp.Tensor(1 / len(yb))
 
-    return ce
-    #  ypred = [float(x._data) for x in ypred]
-    #  yb = [float(x._data) for x in yb]
-    #  return dp.Tensor(log_loss(yb, ypred))
+    Mean Absolute Error Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+    diff = arrayToTensor(np.abs(yb - ypred))
+    return sum(diff) * dp.Tensor(1 / len(yb))
+
+
+def CrossEntropyLoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Returns:
+
+    Cross Entropy Loss
+    &#34;&#34;&#34;
+    #  yb = tensorToArray(yb)
+    #  ypred = tensorToArray(ypred)
+    eps = np.finfo(float).eps
+
+    ce = yb * (np.log(ypred + eps))
+    return dp.Tensor(-np.sum(ce))
+
+
+def MeanLogCoshLoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Returns:
+
+    Mean Absolute Error Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+    diff = np.log(np.cosh(yb, ypred))
+    return dp.Tensor(np.mean(diff))
+
+
+def MeanHellingerLoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Returns:
+
+    Mean Hellinger Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+    diff = np.log(np.cosh(yb, ypred))
+    return dp.Tensor(np.mean(diff))
+
+
+def MeanIOUScore(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Mean IOU Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+
+    uniqueLabels = set(yb.ravel())
+    numUnique = len(uniqueLabels)
+    I = np.empty(shape=(numUnique,), dtype=float)
+    U = np.empty(shape=(numUnique,), dtype=float)
+
+    for i, val in enumerate(uniqueLabels):
+        predI = ypred == val
+        lblI = yb == val
+
+        I[i] = np.sum(np.logical_and(lblI, predI))
+        U[i] = np.sum(np.logical_or(lblI, predI))
+
+    return dp.Tensor(np.mean(I / U))
 
 
 def identifyClassFromProb(probs_):
-    probs_[probs_ &gt; 0.5] = 1
+    try:
+        probs_[probs_ &gt; 0.5] = 1
+    except TypeError:
+        probs_ = np.array([x.data for x in probs_])
+        probs_[probs_ &gt; 0.5] = 1
     probs_[probs_ &lt;= 0.5] = 0
     return probs_
 
 
-def accuracy(yhat, y):
-    &#34;&#34;&#34;[summary]
+def blank(yhat, y):
+    return dp.Tensor(0.0)
+
+
+def accuracy(yb, ypred):
+    &#34;&#34;&#34;
 
     Args:
-        yhat ([type]): [description]
-        y ([type]): [description]
+        yhat
+        y
 
-    Returns:
-        [type]: [description]
     Returns the accuracy
     &#34;&#34;&#34;
-    yhat = np.array([float(x.data) for x in yhat])
-    y = np.array([float(x.data) for x in y])
-    y_hat_ = identifyClassFromProb(yhat)
-    #  return (yhat == y).all(axis=0).mean()
-    return (y_hat_ == y).mean()</code></pre>
+
+    ypred = tensorToArray(ypred)
+    y_hat_ = identifyClassFromProb(ypred)
+    yb = tensorToArray(yb)
+    if yb.shape[-1] == 3:
+        pass
+    elif len(yb.shape) == 1:
+        return np.equal(y_hat_, yb).sum()</code></pre>
 </details>
 </section>
 <section>
@@ -102,123 +195,243 @@ def accuracy(yhat, y):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="tinydl.loss.BCELoss"><code class="name flex">
-<span>def <span class="ident">BCELoss</span></span>(<span>ypred, yb)</span>
+<dt id="tinydl.loss.CrossEntropyLoss"><code class="name flex">
+<span>def <span class="ident">CrossEntropyLoss</span></span>(<span>yb, ypred)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>yb</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>ypred</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>Binary Cross Entropy Loss</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yb
+ypred
+Returns:</p>
+<p>Cross Entropy Loss</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def BCELoss(ypred, yb):  # DOESNT WORK YET
-    &#34;&#34;&#34;[summary]
+<pre><code class="python">def CrossEntropyLoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
 
     Args:
-        yb ([type]): [description]
-        ypred ([type]): [description]
+        yb
+        ypred
 
     Returns:
-        [type]: [description]
-    Binary Cross Entropy Loss
-    &#34;&#34;&#34;
-    ce = sum(ypred) * dp.Tensor(1 / len(yb))
 
-    return ce
-    #  ypred = [float(x._data) for x in ypred]
-    #  yb = [float(x._data) for x in yb]
-    #  return dp.Tensor(log_loss(yb, ypred))</code></pre>
+    Cross Entropy Loss
+    &#34;&#34;&#34;
+    #  yb = tensorToArray(yb)
+    #  ypred = tensorToArray(ypred)
+    eps = np.finfo(float).eps
+
+    ce = yb * (np.log(ypred + eps))
+    return dp.Tensor(-np.sum(ce))</code></pre>
+</details>
+</dd>
+<dt id="tinydl.loss.MAELoss"><code class="name flex">
+<span>def <span class="ident">MAELoss</span></span>(<span>yb, ypred)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yb
+ypred
+Returns:</p>
+<p>Mean Absolute Error Loss</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def MAELoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Returns:
+
+    Mean Absolute Error Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+    diff = arrayToTensor(np.abs(yb - ypred))
+    return sum(diff) * dp.Tensor(1 / len(yb))</code></pre>
 </details>
 </dd>
 <dt id="tinydl.loss.MSELoss"><code class="name flex">
-<span>def <span class="ident">MSELoss</span></span>(<span>ypred, yb)</span>
+<span>def <span class="ident">MSELoss</span></span>(<span>yb, ypred)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>yb</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>ypred</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yb
+ypred
+Returns:</p>
 <p>Mean squared Error Loss</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def MSELoss(ypred, yb):
-    &#34;&#34;&#34;[summary]
+<pre><code class="python">def MSELoss(yb, ypred):
+    &#34;&#34;&#34;
 
     Args:
-        yb ([type]): [description]
-        ypred ([type]): [description]
+        yb
+        ypred
 
     Returns:
-        [type]: [description]
+
     Mean squared Error Loss
     &#34;&#34;&#34;
-    _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+    try:
+        _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
+    except AttributeError:
+        ypred = tensorToArray(ypred)
+        yb = arrayToTensor(yb)
+        _loss = [(yb - ypb) * (yb - ypb) for yb, ypb in zip(yb, ypred)]
 
     return sum(_loss) * dp.Tensor(1 / len(yb))</code></pre>
 </details>
 </dd>
-<dt id="tinydl.loss.accuracy"><code class="name flex">
-<span>def <span class="ident">accuracy</span></span>(<span>yhat, y)</span>
+<dt id="tinydl.loss.MeanHellingerLoss"><code class="name flex">
+<span>def <span class="ident">MeanHellingerLoss</span></span>(<span>yb, ypred)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>yhat</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>y</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>Returns the accuracy</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yb
+ypred
+Returns:</p>
+<p>Mean Hellinger Loss</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def accuracy(yhat, y):
-    &#34;&#34;&#34;[summary]
+<pre><code class="python">def MeanHellingerLoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
 
     Args:
-        yhat ([type]): [description]
-        y ([type]): [description]
+        yb
+        ypred
 
     Returns:
-        [type]: [description]
+
+    Mean Hellinger Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+    diff = np.log(np.cosh(yb, ypred))
+    return dp.Tensor(np.mean(diff))</code></pre>
+</details>
+</dd>
+<dt id="tinydl.loss.MeanIOUScore"><code class="name flex">
+<span>def <span class="ident">MeanIOUScore</span></span>(<span>yb, ypred)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yb
+ypred
+Mean IOU Loss</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def MeanIOUScore(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Mean IOU Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+
+    uniqueLabels = set(yb.ravel())
+    numUnique = len(uniqueLabels)
+    I = np.empty(shape=(numUnique,), dtype=float)
+    U = np.empty(shape=(numUnique,), dtype=float)
+
+    for i, val in enumerate(uniqueLabels):
+        predI = ypred == val
+        lblI = yb == val
+
+        I[i] = np.sum(np.logical_and(lblI, predI))
+        U[i] = np.sum(np.logical_or(lblI, predI))
+
+    return dp.Tensor(np.mean(I / U))</code></pre>
+</details>
+</dd>
+<dt id="tinydl.loss.MeanLogCoshLoss"><code class="name flex">
+<span>def <span class="ident">MeanLogCoshLoss</span></span>(<span>yb, ypred)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yb
+ypred
+Returns:</p>
+<p>Mean Absolute Error Loss</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def MeanLogCoshLoss(yb, ypred):  # WIP
+    &#34;&#34;&#34;
+
+    Args:
+        yb
+        ypred
+
+    Returns:
+
+    Mean Absolute Error Loss
+    &#34;&#34;&#34;
+    yb = tensorToArray(yb)
+    ypred = tensorToArray(ypred)
+    diff = np.log(np.cosh(yb, ypred))
+    return dp.Tensor(np.mean(diff))</code></pre>
+</details>
+</dd>
+<dt id="tinydl.loss.accuracy"><code class="name flex">
+<span>def <span class="ident">accuracy</span></span>(<span>yb, ypred)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>yhat
+y
+Returns the accuracy</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def accuracy(yb, ypred):
+    &#34;&#34;&#34;
+
+    Args:
+        yhat
+        y
+
     Returns the accuracy
     &#34;&#34;&#34;
-    yhat = np.array([float(x.data) for x in yhat])
-    y = np.array([float(x.data) for x in y])
-    y_hat_ = identifyClassFromProb(yhat)
-    #  return (yhat == y).all(axis=0).mean()
-    return (y_hat_ == y).mean()</code></pre>
+
+    ypred = tensorToArray(ypred)
+    y_hat_ = identifyClassFromProb(ypred)
+    yb = tensorToArray(yb)
+    if yb.shape[-1] == 3:
+        pass
+    elif len(yb.shape) == 1:
+        return np.equal(y_hat_, yb).sum()</code></pre>
+</details>
+</dd>
+<dt id="tinydl.loss.blank"><code class="name flex">
+<span>def <span class="ident">blank</span></span>(<span>yhat, y)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def blank(yhat, y):
+    return dp.Tensor(0.0)</code></pre>
 </details>
 </dd>
 <dt id="tinydl.loss.identifyClassFromProb"><code class="name flex">
@@ -231,7 +444,11 @@ def accuracy(yhat, y):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def identifyClassFromProb(probs_):
-    probs_[probs_ &gt; 0.5] = 1
+    try:
+        probs_[probs_ &gt; 0.5] = 1
+    except TypeError:
+        probs_ = np.array([x.data for x in probs_])
+        probs_[probs_ &gt; 0.5] = 1
     probs_[probs_ &lt;= 0.5] = 0
     return probs_</code></pre>
 </details>
@@ -254,9 +471,14 @@ def accuracy(yhat, y):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="tinydl.loss.BCELoss" href="#tinydl.loss.BCELoss">BCELoss</a></code></li>
+<li><code><a title="tinydl.loss.CrossEntropyLoss" href="#tinydl.loss.CrossEntropyLoss">CrossEntropyLoss</a></code></li>
+<li><code><a title="tinydl.loss.MAELoss" href="#tinydl.loss.MAELoss">MAELoss</a></code></li>
 <li><code><a title="tinydl.loss.MSELoss" href="#tinydl.loss.MSELoss">MSELoss</a></code></li>
+<li><code><a title="tinydl.loss.MeanHellingerLoss" href="#tinydl.loss.MeanHellingerLoss">MeanHellingerLoss</a></code></li>
+<li><code><a title="tinydl.loss.MeanIOUScore" href="#tinydl.loss.MeanIOUScore">MeanIOUScore</a></code></li>
+<li><code><a title="tinydl.loss.MeanLogCoshLoss" href="#tinydl.loss.MeanLogCoshLoss">MeanLogCoshLoss</a></code></li>
 <li><code><a title="tinydl.loss.accuracy" href="#tinydl.loss.accuracy">accuracy</a></code></li>
+<li><code><a title="tinydl.loss.blank" href="#tinydl.loss.blank">blank</a></code></li>
 <li><code><a title="tinydl.loss.identifyClassFromProb" href="#tinydl.loss.identifyClassFromProb">identifyClassFromProb</a></code></li>
 </ul>
 </li>

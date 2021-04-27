@@ -21,7 +21,7 @@ def pbar(
 ):
     """
     Args:
-        iterable 
+        iterable
         length (int, optional): . Defaults to 50. Change if you have a big/small screen.
         listofextra (list, optional): . Defaults to []. Extra text
         prefix (str, optional): . Defaults to "".
@@ -30,7 +30,7 @@ def pbar(
         fill (str, optional): . Defaults to "█". Change if you want a different block
         printEnd (str, optional): . Defaults to "\r".
     Yields:
-        
+
     Custom progress bar.
     """
     total = len(iterable)
@@ -55,7 +55,7 @@ def pbar(
 def info(arr, n="", p=0):
     """
     Args:
-        arr 
+        arr
         n (str, optional): . Defaults to "".
         p (int, optional): . Defaults to 0.
     Give an array, get a description. Shape, count, mean etc.
@@ -92,8 +92,8 @@ def getexpno(logdir=logdir):
 def savemodel(model, total_loss):
     """
     Args:
-        model 
-        total_loss 
+        model
+        total_loss
     Save the model to a pickle file
     """
     with open("model.pkl", "wb+") as f:
@@ -116,6 +116,7 @@ def loadmodel():
         te = pickle.load(f)
         return te
 
+
 def tensorToArray(arr):
     """
     Args:
@@ -127,6 +128,7 @@ def tensorToArray(arr):
     except AttributeError:
         return np.array([x.data for x in np.array(arr)])
 
+
 def arrayToTensor(arr):
     """
     Args:
@@ -137,4 +139,3 @@ def arrayToTensor(arr):
         return [Tensor(x) for x in arr]
     except AttributeError:
         return [Tensor(x) for x in np.array(arr)]
-

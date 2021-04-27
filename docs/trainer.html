@@ -36,14 +36,14 @@ import tinydl as td
 
 
 def GD(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     gradient descent optimizer
     &#34;&#34;&#34;
     for p in model.parameters():
@@ -51,14 +51,14 @@ def GD(step, model, learning_rate, vw, vw2):
 
 
 def GDM(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     Gradient descent optimizer with momentum
 
     &#34;&#34;&#34;
@@ -67,14 +67,14 @@ def GDM(step, model, learning_rate, vw, vw2):
 
 
 def NGD(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     gradient descent optimizer with Nesterov momentum
 
     &#34;&#34;&#34;
@@ -83,14 +83,14 @@ def NGD(step, model, learning_rate, vw, vw2):
 
 
 def RMSProp(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     RMSProp Optimizer
     &#34;&#34;&#34;
     for p in model.parameters():
@@ -99,14 +99,14 @@ def RMSProp(step, model, learning_rate, vw, vw2):
 
 
 def ADAM(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     ADAM Optimizer
     &#34;&#34;&#34;
     for p in model.parameters():
@@ -131,12 +131,12 @@ dict_loss = {
 
 
 def train(X, y, model):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        X ([type]): [description]
-        y ([type]): [description]
-        model ([type]): [description]
+        X
+        y
+        model
     Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
     &#34;&#34;&#34;
     lossHistory = []
@@ -149,6 +149,9 @@ def train(X, y, model):
         currtime = datetime.now().strftime(&#34;%d/%m/%Y %H:%M:%S&#34;)
         exp_file.write(f&#34;Experiment conducted on : {currtime}\n&#34;)
         exp_file.write(&#34;epoch,loss\n&#34;)
+
+    if (resumetrain == True) and (modelpath != None):
+        savedmo = loadmodel()
 
     for steps in pbar(range(numEpochs)):
         ri = np.random.permutation(X.shape[0])[:batch_size]
@@ -165,7 +168,15 @@ def train(X, y, model):
         lossHistory.append(total_loss.data)
 
         # accuracy
-        print(&#34;Train Accuracy &#34;, getattr(td.loss, accuracy_metric)(y_pred_b, yb))
+        print(
+            &#34;\nTrain Accuracy : &#34;, getattr(td.loss, accuracy_metric)(yb, y_pred_b), &#34;%&#34;
+        )
+        # ADD CHECK FOR EMPTY FILE
+        if (steps == 0) and (resumetrain == True) and (modelpath != None):
+            savedmo = loadmodel()
+            total_loss = savedmo[&#34;loss&#34;]
+            print(model.parameters)
+            model.parameters = savedmo[&#34;parameters&#34;]  # doesnt work
 
         # backward
         model.init_backward()
@@ -178,6 +189,7 @@ def train(X, y, model):
 
         # Optimize
         dict_optim[optimizer](steps, model, learning_rate, vw, vw2)
+
         if steps % afterEvery == 0:
             savemodel(model, total_loss)
             print(f&#34;\nloss {total_loss.data} &#34;)
@@ -202,34 +214,26 @@ def train(X, y, model):
 <span>def <span class="ident">ADAM</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>ADAM Optimizer</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>step
+model
+learning_rate
+vw
+vw2
+ADAM Optimizer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def ADAM(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     ADAM Optimizer
     &#34;&#34;&#34;
     for p in model.parameters():
@@ -244,34 +248,26 @@ def train(X, y, model):
 <span>def <span class="ident">GD</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>gradient descent optimizer</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>step
+model
+learning_rate
+vw
+vw2
+gradient descent optimizer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def GD(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     gradient descent optimizer
     &#34;&#34;&#34;
     for p in model.parameters():
@@ -282,34 +278,26 @@ def train(X, y, model):
 <span>def <span class="ident">GDM</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>Gradient descent optimizer with momentum</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>step
+model
+learning_rate
+vw
+vw2
+Gradient descent optimizer with momentum</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def GDM(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     Gradient descent optimizer with momentum
 
     &#34;&#34;&#34;
@@ -321,34 +309,26 @@ def train(X, y, model):
 <span>def <span class="ident">NGD</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>gradient descent optimizer with Nesterov momentum</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>step
+model
+learning_rate
+vw
+vw2
+gradient descent optimizer with Nesterov momentum</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def NGD(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     gradient descent optimizer with Nesterov momentum
 
     &#34;&#34;&#34;
@@ -360,34 +340,26 @@ def train(X, y, model):
 <span>def <span class="ident">RMSProp</span></span>(<span>step, model, learning_rate, vw, vw2)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>step</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>learning_rate</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>vw2</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>RMSProp Optimizer</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>step
+model
+learning_rate
+vw
+vw2
+RMSProp Optimizer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def RMSProp(step, model, learning_rate, vw, vw2):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step
+        model
+        learning_rate
+        vw
+        vw2
     RMSProp Optimizer
     &#34;&#34;&#34;
     for p in model.parameters():
@@ -399,28 +371,22 @@ def train(X, y, model):
 <span>def <span class="ident">train</span></span>(<span>X, y, model)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>X</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>y</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>X
+y
+model
+Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def train(X, y, model):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
-        X ([type]): [description]
-        y ([type]): [description]
-        model ([type]): [description]
+        X
+        y
+        model
     Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
     &#34;&#34;&#34;
     lossHistory = []
@@ -433,6 +399,9 @@ def train(X, y, model):
         currtime = datetime.now().strftime(&#34;%d/%m/%Y %H:%M:%S&#34;)
         exp_file.write(f&#34;Experiment conducted on : {currtime}\n&#34;)
         exp_file.write(&#34;epoch,loss\n&#34;)
+
+    if (resumetrain == True) and (modelpath != None):
+        savedmo = loadmodel()
 
     for steps in pbar(range(numEpochs)):
         ri = np.random.permutation(X.shape[0])[:batch_size]
@@ -449,7 +418,15 @@ def train(X, y, model):
         lossHistory.append(total_loss.data)
 
         # accuracy
-        print(&#34;Train Accuracy &#34;, getattr(td.loss, accuracy_metric)(y_pred_b, yb))
+        print(
+            &#34;\nTrain Accuracy : &#34;, getattr(td.loss, accuracy_metric)(yb, y_pred_b), &#34;%&#34;
+        )
+        # ADD CHECK FOR EMPTY FILE
+        if (steps == 0) and (resumetrain == True) and (modelpath != None):
+            savedmo = loadmodel()
+            total_loss = savedmo[&#34;loss&#34;]
+            print(model.parameters)
+            model.parameters = savedmo[&#34;parameters&#34;]  # doesnt work
 
         # backward
         model.init_backward()
@@ -462,6 +439,7 @@ def train(X, y, model):
 
         # Optimize
         dict_optim[optimizer](steps, model, learning_rate, vw, vw2)
+
         if steps % afterEvery == 0:
             savemodel(model, total_loss)
             print(f&#34;\nloss {total_loss.data} &#34;)

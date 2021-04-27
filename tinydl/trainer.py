@@ -11,11 +11,11 @@ def GD(step, model, learning_rate, vw, vw2):
     """
 
     Args:
-        step 
-        model 
-        learning_rate 
-        vw 
-        vw2 
+        step
+        model
+        learning_rate
+        vw
+        vw2
     gradient descent optimizer
     """
     for p in model.parameters():
@@ -26,11 +26,11 @@ def GDM(step, model, learning_rate, vw, vw2):
     """
 
     Args:
-        step 
-        model 
-        learning_rate 
-        vw 
-        vw2 
+        step
+        model
+        learning_rate
+        vw
+        vw2
     Gradient descent optimizer with momentum
 
     """
@@ -42,11 +42,11 @@ def NGD(step, model, learning_rate, vw, vw2):
     """
 
     Args:
-        step 
-        model 
-        learning_rate 
-        vw 
-        vw2 
+        step
+        model
+        learning_rate
+        vw
+        vw2
     gradient descent optimizer with Nesterov momentum
 
     """
@@ -58,11 +58,11 @@ def RMSProp(step, model, learning_rate, vw, vw2):
     """
 
     Args:
-        step 
-        model 
-        learning_rate 
-        vw 
-        vw2 
+        step
+        model
+        learning_rate
+        vw
+        vw2
     RMSProp Optimizer
     """
     for p in model.parameters():
@@ -74,11 +74,11 @@ def ADAM(step, model, learning_rate, vw, vw2):
     """
 
     Args:
-        step 
-        model 
-        learning_rate 
-        vw 
-        vw2 
+        step
+        model
+        learning_rate
+        vw
+        vw2
     ADAM Optimizer
     """
     for p in model.parameters():
@@ -106,9 +106,9 @@ def train(X, y, model):
     """
 
     Args:
-        X 
-        y 
-        model 
+        X
+        y
+        model
     Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
     """
     lossHistory = []
@@ -140,7 +140,9 @@ def train(X, y, model):
         lossHistory.append(total_loss.data)
 
         # accuracy
-        print("\nTrain Accuracy : ", getattr(td.loss, accuracy_metric)(yb, y_pred_b), "%")
+        print(
+            "\nTrain Accuracy : ", getattr(td.loss, accuracy_metric)(yb, y_pred_b), "%"
+        )
         # ADD CHECK FOR EMPTY FILE
         if (steps == 0) and (resumetrain == True) and (modelpath != None):
             savedmo = loadmodel()

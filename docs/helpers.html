@@ -30,6 +30,7 @@
 import os
 from config import *
 import pickle
+from tinydl.tensor import Tensor
 
 &#34;&#34;&#34;
 This module has some extra features that would be nice to have but are not strictly deep learning related
@@ -46,18 +47,18 @@ def pbar(
     fill=&#34;█&#34;,
     printEnd=&#34;\r&#34;,
 ):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        iterable ([type]): [description]
-        length (int, optional): [description]. Defaults to 50. Change if you have a big/small screen.
-        listofextra (list, optional): [description]. Defaults to []. Extra text
-        prefix (str, optional): [description]. Defaults to &#34;&#34;.
-        suffix (str, optional): [description]. Defaults to &#34;&#34;.
-        decimals (int, optional): [description]. Defaults to 1.
-        fill (str, optional): [description]. Defaults to &#34;█&#34;. Change if you want a different block
-        printEnd (str, optional): [description]. Defaults to &#34;\r&#34;.
+        iterable
+        length (int, optional): . Defaults to 50. Change if you have a big/small screen.
+        listofextra (list, optional): . Defaults to []. Extra text
+        prefix (str, optional): . Defaults to &#34;&#34;.
+        suffix (str, optional): . Defaults to &#34;&#34;.
+        decimals (int, optional): . Defaults to 1.
+        fill (str, optional): . Defaults to &#34;█&#34;. Change if you want a different block
+        printEnd (str, optional): . Defaults to &#34;\r&#34;.
     Yields:
-        [type]: [description]
+
     Custom progress bar.
     &#34;&#34;&#34;
     total = len(iterable)
@@ -80,11 +81,11 @@ def pbar(
 
 
 def info(arr, n=&#34;&#34;, p=0):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        arr ([type]): [description]
-        n (str, optional): [description]. Defaults to &#34;&#34;.
-        p (int, optional): [description]. Defaults to 0.
+        arr
+        n (str, optional): . Defaults to &#34;&#34;.
+        p (int, optional): . Defaults to 0.
     Give an array, get a description. Shape, count, mean etc.
     &#34;&#34;&#34;
     print(f&#34;name : {n}&#34;)
@@ -97,9 +98,9 @@ def info(arr, n=&#34;&#34;, p=0):
 
 
 def checkifdir(logdir=logdir):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        logdir ([type], optional): [description]. Defaults to logdir.
+        logdir . Defaults to logdir.
     Check if the directory exists
     &#34;&#34;&#34;
     if not os.path.isdir(logdir):
@@ -107,21 +108,20 @@ def checkifdir(logdir=logdir):
 
 
 def getexpno(logdir=logdir):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        logdir ([type], optional): [description]. Defaults to logdir.
+        logdir . Defaults to logdir.
     Returns:
-        [type]: [description]
     Return the current experiment number
     &#34;&#34;&#34;
     return len(os.listdir(logdir))  # Offset by 1 because of .gitkeep
 
 
 def savemodel(model, total_loss):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        model ([type]): [description]
-        total_loss ([type]): [description]
+        model
+        total_loss
     Save the model to a pickle file
     &#34;&#34;&#34;
     with open(&#34;model.pkl&#34;, &#34;wb+&#34;) as f:
@@ -131,7 +131,42 @@ def savemodel(model, total_loss):
                 &#34;loss&#34;: total_loss.data,
             },
             f,
-        )</code></pre>
+        )
+
+
+def loadmodel():
+    &#34;&#34;&#34;
+    Args:
+        None
+    Loads the saved model from a pickle file
+    &#34;&#34;&#34;
+    with open(&#34;model.pkl&#34;, &#34;rb+&#34;) as f:
+        te = pickle.load(f)
+        return te
+
+
+def tensorToArray(arr):
+    &#34;&#34;&#34;
+    Args:
+        tensor
+    Takes an array of Tensors and returns a numpy array
+    &#34;&#34;&#34;
+    try:
+        return np.array([x.data for x in arr])
+    except AttributeError:
+        return np.array([x.data for x in np.array(arr)])
+
+
+def arrayToTensor(arr):
+    &#34;&#34;&#34;
+    Args:
+        Array
+    Takes an array of Tensors and returns a numpy array
+    &#34;&#34;&#34;
+    try:
+        return [Tensor(x) for x in arr]
+    except AttributeError:
+        return [Tensor(x) for x in np.array(arr)]</code></pre>
 </details>
 </section>
 <section>
@@ -141,25 +176,44 @@ def savemodel(model, total_loss):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="tinydl.helpers.arrayToTensor"><code class="name flex">
+<span>def <span class="ident">arrayToTensor</span></span>(<span>arr)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>Array
+Takes an array of Tensors and returns a numpy array</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def arrayToTensor(arr):
+    &#34;&#34;&#34;
+    Args:
+        Array
+    Takes an array of Tensors and returns a numpy array
+    &#34;&#34;&#34;
+    try:
+        return [Tensor(x) for x in arr]
+    except AttributeError:
+        return [Tensor(x) for x in np.array(arr)]</code></pre>
+</details>
+</dd>
 <dt id="tinydl.helpers.checkifdir"><code class="name flex">
 <span>def <span class="ident">checkifdir</span></span>(<span>logdir='./experiments/')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>logdir</code></strong> :&ensp;<code>[type]</code>, optional</dt>
-<dd>[description]. Defaults to logdir.</dd>
-</dl>
-<p>Check if the directory exists</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>logdir . Defaults to logdir.
+Check if the directory exists</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def checkifdir(logdir=logdir):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        logdir ([type], optional): [description]. Defaults to logdir.
+        logdir . Defaults to logdir.
     Check if the directory exists
     &#34;&#34;&#34;
     if not os.path.isdir(logdir):
@@ -170,28 +224,19 @@ def savemodel(model, total_loss):
 <span>def <span class="ident">getexpno</span></span>(<span>logdir='./experiments/')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>logdir</code></strong> :&ensp;<code>[type]</code>, optional</dt>
-<dd>[description]. Defaults to logdir.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>Return the current experiment number</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>logdir . Defaults to logdir.
+Returns:
+Return the current experiment number</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def getexpno(logdir=logdir):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        logdir ([type], optional): [description]. Defaults to logdir.
+        logdir . Defaults to logdir.
     Returns:
-        [type]: [description]
     Return the current experiment number
     &#34;&#34;&#34;
     return len(os.listdir(logdir))  # Offset by 1 because of .gitkeep</code></pre>
@@ -201,15 +246,13 @@ def savemodel(model, total_loss):
 <span>def <span class="ident">info</span></span>(<span>arr, n='', p=0)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
+<div class="desc"><h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>arr</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
+<dt>arr</dt>
 <dt><strong><code>n</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>[description]. Defaults to "".</dd>
+<dd>. Defaults to "".</dd>
 <dt><strong><code>p</code></strong> :&ensp;<code>int</code>, optional</dt>
-<dd>[description]. Defaults to 0.</dd>
+<dd>. Defaults to 0.</dd>
 </dl>
 <p>Give an array, get a description. Shape, count, mean etc.</p></div>
 <details class="source">
@@ -217,11 +260,11 @@ def savemodel(model, total_loss):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def info(arr, n=&#34;&#34;, p=0):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        arr ([type]): [description]
-        n (str, optional): [description]. Defaults to &#34;&#34;.
-        p (int, optional): [description]. Defaults to 0.
+        arr
+        n (str, optional): . Defaults to &#34;&#34;.
+        p (int, optional): . Defaults to 0.
     Give an array, get a description. Shape, count, mean etc.
     &#34;&#34;&#34;
     print(f&#34;name : {n}&#34;)
@@ -233,36 +276,52 @@ def savemodel(model, total_loss):
         print(arr)</code></pre>
 </details>
 </dd>
+<dt id="tinydl.helpers.loadmodel"><code class="name flex">
+<span>def <span class="ident">loadmodel</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>None
+Loads the saved model from a pickle file</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loadmodel():
+    &#34;&#34;&#34;
+    Args:
+        None
+    Loads the saved model from a pickle file
+    &#34;&#34;&#34;
+    with open(&#34;model.pkl&#34;, &#34;rb+&#34;) as f:
+        te = pickle.load(f)
+        return te</code></pre>
+</details>
+</dd>
 <dt id="tinydl.helpers.pbar"><code class="name flex">
 <span>def <span class="ident">pbar</span></span>(<span>iterable, length=50, listofextra=[], prefix='', suffix='', decimals=1, fill='█', printEnd='\r')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
+<div class="desc"><h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>iterable</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
+<dt>iterable</dt>
 <dt><strong><code>length</code></strong> :&ensp;<code>int</code>, optional</dt>
-<dd>[description]. Defaults to 50. Change if you have a big/small screen.</dd>
+<dd>. Defaults to 50. Change if you have a big/small screen.</dd>
 <dt><strong><code>listofextra</code></strong> :&ensp;<code>list</code>, optional</dt>
-<dd>[description]. Defaults to []. Extra text</dd>
+<dd>. Defaults to []. Extra text</dd>
 <dt><strong><code>prefix</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>[description]. Defaults to "".</dd>
+<dd>. Defaults to "".</dd>
 <dt><strong><code>suffix</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>[description]. Defaults to "".</dd>
+<dd>. Defaults to "".</dd>
 <dt><strong><code>decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
-<dd>[description]. Defaults to 1.</dd>
+<dd>. Defaults to 1.</dd>
 <dt><strong><code>fill</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>[description]. Defaults to "█". Change if you want a different block</dd>
+<dd>. Defaults to "█". Change if you want a different block</dd>
 <dt><strong><code>printEnd</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>[description]. Defaults to "
+<dd>. Defaults to "
 ".</dd>
 </dl>
-<h2 id="yields">Yields</h2>
-<dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
+<p>Yields:</p>
 <p>Custom progress bar.</p></div>
 <details class="source">
 <summary>
@@ -278,18 +337,18 @@ def savemodel(model, total_loss):
     fill=&#34;█&#34;,
     printEnd=&#34;\r&#34;,
 ):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        iterable ([type]): [description]
-        length (int, optional): [description]. Defaults to 50. Change if you have a big/small screen.
-        listofextra (list, optional): [description]. Defaults to []. Extra text
-        prefix (str, optional): [description]. Defaults to &#34;&#34;.
-        suffix (str, optional): [description]. Defaults to &#34;&#34;.
-        decimals (int, optional): [description]. Defaults to 1.
-        fill (str, optional): [description]. Defaults to &#34;█&#34;. Change if you want a different block
-        printEnd (str, optional): [description]. Defaults to &#34;\r&#34;.
+        iterable
+        length (int, optional): . Defaults to 50. Change if you have a big/small screen.
+        listofextra (list, optional): . Defaults to []. Extra text
+        prefix (str, optional): . Defaults to &#34;&#34;.
+        suffix (str, optional): . Defaults to &#34;&#34;.
+        decimals (int, optional): . Defaults to 1.
+        fill (str, optional): . Defaults to &#34;█&#34;. Change if you want a different block
+        printEnd (str, optional): . Defaults to &#34;\r&#34;.
     Yields:
-        [type]: [description]
+
     Custom progress bar.
     &#34;&#34;&#34;
     total = len(iterable)
@@ -315,24 +374,19 @@ def savemodel(model, total_loss):
 <span>def <span class="ident">savemodel</span></span>(<span>model, total_loss)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>model</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-<dt><strong><code>total_loss</code></strong> :&ensp;<code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
-<p>Save the model to a pickle file</p></div>
+<div class="desc"><h2 id="args">Args</h2>
+<p>model
+total_loss
+Save the model to a pickle file</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def savemodel(model, total_loss):
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
     Args:
-        model ([type]): [description]
-        total_loss ([type]): [description]
+        model
+        total_loss
     Save the model to a pickle file
     &#34;&#34;&#34;
     with open(&#34;model.pkl&#34;, &#34;wb+&#34;) as f:
@@ -343,6 +397,29 @@ def savemodel(model, total_loss):
             },
             f,
         )</code></pre>
+</details>
+</dd>
+<dt id="tinydl.helpers.tensorToArray"><code class="name flex">
+<span>def <span class="ident">tensorToArray</span></span>(<span>arr)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>tensor
+Takes an array of Tensors and returns a numpy array</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tensorToArray(arr):
+    &#34;&#34;&#34;
+    Args:
+        tensor
+    Takes an array of Tensors and returns a numpy array
+    &#34;&#34;&#34;
+    try:
+        return np.array([x.data for x in arr])
+    except AttributeError:
+        return np.array([x.data for x in np.array(arr)])</code></pre>
 </details>
 </dd>
 </dl>
@@ -362,12 +439,15 @@ def savemodel(model, total_loss):
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="tinydl.helpers.arrayToTensor" href="#tinydl.helpers.arrayToTensor">arrayToTensor</a></code></li>
 <li><code><a title="tinydl.helpers.checkifdir" href="#tinydl.helpers.checkifdir">checkifdir</a></code></li>
 <li><code><a title="tinydl.helpers.getexpno" href="#tinydl.helpers.getexpno">getexpno</a></code></li>
 <li><code><a title="tinydl.helpers.info" href="#tinydl.helpers.info">info</a></code></li>
+<li><code><a title="tinydl.helpers.loadmodel" href="#tinydl.helpers.loadmodel">loadmodel</a></code></li>
 <li><code><a title="tinydl.helpers.pbar" href="#tinydl.helpers.pbar">pbar</a></code></li>
 <li><code><a title="tinydl.helpers.savemodel" href="#tinydl.helpers.savemodel">savemodel</a></code></li>
+<li><code><a title="tinydl.helpers.tensorToArray" href="#tinydl.helpers.tensorToArray">tensorToArray</a></code></li>
 </ul>
 </li>
 </ul>

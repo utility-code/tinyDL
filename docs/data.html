@@ -29,10 +29,13 @@
 <pre><code class="python">from config import *
 import numpy as np
 import pandas as pd
+from pathlib import Path
+import cv2
+from tinydl.augmentation import *
 
 
 class DataFrameClassification:
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
         fpath: File path or DataFrame.
@@ -42,8 +45,7 @@ class DataFrameClassification:
         normalize : Well. It normalizes. Either True or False
 
     Returns:
-        [type]: [description]
-    Loader for a table type of dataset. Anything you would use pandas for
+        Loader for a table type of dataset. Anything you would use pandas for
     &#34;&#34;&#34;
 
     def __init__(
@@ -83,6 +85,73 @@ class DataFrameClassification:
             trainy.to_numpy(dtype=&#34;float64&#34;),
             testX.to_numpy(),
             testy.to_numpy(dtype=&#34;float64&#34;),
+        )
+
+
+class ImageFolderClassification:
+    &#34;&#34;&#34;
+    Directory type:
+    - class1
+        - img1
+        - img2
+        - ....
+
+    - class2
+        - img1
+        - img2
+        - ....
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        fpath,
+        max_entries=None,
+        train_pct=0.8,
+        image_shape=(64, 64),
+        aug=[Normalize],
+    ):
+        self.fpath = Path(fpath)
+        self.train_pct = train_pct
+        self.max_rows = max_entries
+        self.label_dict = {}
+        self.image_shape = image_shape
+        self.aug = aug
+
+    def labelFromMap(self, x):
+        return self.label_dict[x.parent.name]
+
+    def loadAndAugment(self, X):
+        X_images = []
+        for im in X:
+            X_images.append(cv2.resize(cv2.imread(str(im)), self.image_shape))
+        X_images = np.array(X_images)
+
+        X_images = augment(X_images, self.image_shape, self.aug)
+        return X_images
+
+    def read_data(self):
+        print(&#34;Loading data&#34;)
+        classes = [x for x in self.fpath.glob(&#34;*&#34;)]
+        self.label_dict = {classes[x].name: x for x in range(len(classes))}
+        print(f&#34;\nLabels : {self.label_dict}&#34;)
+        all_files = pd.DataFrame(
+            [x for x in self.fpath.glob(&#34;*/*.png&#34;)], columns=[&#34;path&#34;]
+        )
+        all_files[&#34;label&#34;] = all_files[&#34;path&#34;].apply(self.labelFromMap)
+
+        X, y = all_files[&#34;path&#34;], all_files[&#34;label&#34;]
+        trainX = X.sample(frac=self.train_pct)
+        trainy = y.sample(frac=self.train_pct)
+        testX = self.loadAndAugment(X.drop(trainX.index))
+        trainX = self.loadAndAugment(trainX)
+        testy = y.drop(trainy.index)
+
+        print(&#34;Done loading data&#34;)
+        return (
+            trainX,
+            trainy.to_numpy(dtype=&#34;float64&#34;),
+            testX,
+            testy.to_numpy(dtype=&#34;float64&#34;),
         )</code></pre>
 </details>
 </section>
@@ -100,8 +169,7 @@ class DataFrameClassification:
 <span>(</span><span>fpath, max_rows, label_col=['target'], file_type='csv', train_pct=0.8, normalize=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>[summary]</p>
-<h2 id="args">Args</h2>
+<div class="desc"><h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>fpath</code></strong></dt>
 <dd>File path or DataFrame.</dd>
@@ -111,17 +179,13 @@ file_type : csv, excel anything supported by pandas
 train_pct : split percentage
 normalize : Well. It normalizes. Either True or False</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>[type]</code></dt>
-<dd>[description]</dd>
-</dl>
 <p>Loader for a table type of dataset. Anything you would use pandas for</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class DataFrameClassification:
-    &#34;&#34;&#34;[summary]
+    &#34;&#34;&#34;
 
     Args:
         fpath: File path or DataFrame.
@@ -131,8 +195,7 @@ normalize : Well. It normalizes. Either True or False</p>
         normalize : Well. It normalizes. Either True or False
 
     Returns:
-        [type]: [description]
-    Loader for a table type of dataset. Anything you would use pandas for
+        Loader for a table type of dataset. Anything you would use pandas for
     &#34;&#34;&#34;
 
     def __init__(
@@ -211,6 +274,165 @@ normalize : Well. It normalizes. Either True or False</p>
 </dd>
 </dl>
 </dd>
+<dt id="tinydl.data.ImageFolderClassification"><code class="flex name class">
+<span>class <span class="ident">ImageFolderClassification</span></span>
+<span>(</span><span>fpath, max_entries=None, train_pct=0.8, image_shape=(64, 64), aug=[&lt;function Normalize&gt;])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Directory type:
+- class1
+- img1
+- img2
+- ....</p>
+<ul>
+<li>class2<ul>
+<li>img1</li>
+<li>img2</li>
+<li>....</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ImageFolderClassification:
+    &#34;&#34;&#34;
+    Directory type:
+    - class1
+        - img1
+        - img2
+        - ....
+
+    - class2
+        - img1
+        - img2
+        - ....
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        fpath,
+        max_entries=None,
+        train_pct=0.8,
+        image_shape=(64, 64),
+        aug=[Normalize],
+    ):
+        self.fpath = Path(fpath)
+        self.train_pct = train_pct
+        self.max_rows = max_entries
+        self.label_dict = {}
+        self.image_shape = image_shape
+        self.aug = aug
+
+    def labelFromMap(self, x):
+        return self.label_dict[x.parent.name]
+
+    def loadAndAugment(self, X):
+        X_images = []
+        for im in X:
+            X_images.append(cv2.resize(cv2.imread(str(im)), self.image_shape))
+        X_images = np.array(X_images)
+
+        X_images = augment(X_images, self.image_shape, self.aug)
+        return X_images
+
+    def read_data(self):
+        print(&#34;Loading data&#34;)
+        classes = [x for x in self.fpath.glob(&#34;*&#34;)]
+        self.label_dict = {classes[x].name: x for x in range(len(classes))}
+        print(f&#34;\nLabels : {self.label_dict}&#34;)
+        all_files = pd.DataFrame(
+            [x for x in self.fpath.glob(&#34;*/*.png&#34;)], columns=[&#34;path&#34;]
+        )
+        all_files[&#34;label&#34;] = all_files[&#34;path&#34;].apply(self.labelFromMap)
+
+        X, y = all_files[&#34;path&#34;], all_files[&#34;label&#34;]
+        trainX = X.sample(frac=self.train_pct)
+        trainy = y.sample(frac=self.train_pct)
+        testX = self.loadAndAugment(X.drop(trainX.index))
+        trainX = self.loadAndAugment(trainX)
+        testy = y.drop(trainy.index)
+
+        print(&#34;Done loading data&#34;)
+        return (
+            trainX,
+            trainy.to_numpy(dtype=&#34;float64&#34;),
+            testX,
+            testy.to_numpy(dtype=&#34;float64&#34;),
+        )</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="tinydl.data.ImageFolderClassification.labelFromMap"><code class="name flex">
+<span>def <span class="ident">labelFromMap</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def labelFromMap(self, x):
+    return self.label_dict[x.parent.name]</code></pre>
+</details>
+</dd>
+<dt id="tinydl.data.ImageFolderClassification.loadAndAugment"><code class="name flex">
+<span>def <span class="ident">loadAndAugment</span></span>(<span>self, X)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loadAndAugment(self, X):
+    X_images = []
+    for im in X:
+        X_images.append(cv2.resize(cv2.imread(str(im)), self.image_shape))
+    X_images = np.array(X_images)
+
+    X_images = augment(X_images, self.image_shape, self.aug)
+    return X_images</code></pre>
+</details>
+</dd>
+<dt id="tinydl.data.ImageFolderClassification.read_data"><code class="name flex">
+<span>def <span class="ident">read_data</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_data(self):
+    print(&#34;Loading data&#34;)
+    classes = [x for x in self.fpath.glob(&#34;*&#34;)]
+    self.label_dict = {classes[x].name: x for x in range(len(classes))}
+    print(f&#34;\nLabels : {self.label_dict}&#34;)
+    all_files = pd.DataFrame(
+        [x for x in self.fpath.glob(&#34;*/*.png&#34;)], columns=[&#34;path&#34;]
+    )
+    all_files[&#34;label&#34;] = all_files[&#34;path&#34;].apply(self.labelFromMap)
+
+    X, y = all_files[&#34;path&#34;], all_files[&#34;label&#34;]
+    trainX = X.sample(frac=self.train_pct)
+    trainy = y.sample(frac=self.train_pct)
+    testX = self.loadAndAugment(X.drop(trainX.index))
+    trainX = self.loadAndAugment(trainX)
+    testy = y.drop(trainy.index)
+
+    print(&#34;Done loading data&#34;)
+    return (
+        trainX,
+        trainy.to_numpy(dtype=&#34;float64&#34;),
+        testX,
+        testy.to_numpy(dtype=&#34;float64&#34;),
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 </dl>
 </section>
 </article>
@@ -231,6 +453,14 @@ normalize : Well. It normalizes. Either True or False</p>
 <h4><code><a title="tinydl.data.DataFrameClassification" href="#tinydl.data.DataFrameClassification">DataFrameClassification</a></code></h4>
 <ul class="">
 <li><code><a title="tinydl.data.DataFrameClassification.read_data" href="#tinydl.data.DataFrameClassification.read_data">read_data</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tinydl.data.ImageFolderClassification" href="#tinydl.data.ImageFolderClassification">ImageFolderClassification</a></code></h4>
+<ul class="">
+<li><code><a title="tinydl.data.ImageFolderClassification.labelFromMap" href="#tinydl.data.ImageFolderClassification.labelFromMap">labelFromMap</a></code></li>
+<li><code><a title="tinydl.data.ImageFolderClassification.loadAndAugment" href="#tinydl.data.ImageFolderClassification.loadAndAugment">loadAndAugment</a></code></li>
+<li><code><a title="tinydl.data.ImageFolderClassification.read_data" href="#tinydl.data.ImageFolderClassification.read_data">read_data</a></code></li>
 </ul>
 </li>
 </ul>

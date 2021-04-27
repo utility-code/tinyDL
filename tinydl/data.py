@@ -1,10 +1,12 @@
 from config import *
 import numpy as np
 import pandas as pd
-
+from pathlib import Path
+import cv2
+from tinydl.augmentation import *
 
 class DataFrameClassification:
-    """[summary]
+    """
 
     Args:
         fpath: File path or DataFrame.
@@ -14,8 +16,7 @@ class DataFrameClassification:
         normalize : Well. It normalizes. Either True or False
 
     Returns:
-        [type]: [description]
-    Loader for a table type of dataset. Anything you would use pandas for
+        Loader for a table type of dataset. Anything you would use pandas for
     """
 
     def __init__(
@@ -56,3 +57,72 @@ class DataFrameClassification:
             testX.to_numpy(),
             testy.to_numpy(dtype="float64"),
         )
+
+
+class ImageFolderClassification:
+    """
+    Directory type:
+    - class1
+        - img1
+        - img2
+        - ....
+    
+    - class2
+        - img1
+        - img2
+        - ....
+    """
+
+    def __init__(
+        self,
+        fpath,
+        max_entries=None,
+        train_pct=0.8,
+        image_shape=(64, 64),
+        aug = [Normalize]
+    ):
+        self.fpath = Path(fpath)
+        self.train_pct = train_pct
+        self.max_rows = max_entries
+        self.label_dict = {}
+        self.image_shape = image_shape
+        self.aug = aug
+
+    def labelFromMap(self, x):
+        return self.label_dict[x.parent.name]
+
+    def loadAndAugment(self, X):
+        X_images = []
+        for im in X:
+            X_images.append(cv2.resize(cv2.imread(str(im)), self.image_shape))
+        X_images = np.array(X_images)
+
+        X_images = augment(X_images,
+                           self.image_shape,
+                           self.aug)
+        return X_images
+
+    def read_data(self):
+        print("Loading data")
+        classes = [x for x in self.fpath.glob("*")]
+        self.label_dict = {classes[x].name: x for x in range(len(classes))}
+        print(f"\nLabels : {self.label_dict}")
+        all_files = pd.DataFrame(
+            [x for x in self.fpath.glob("*/*.png")], columns=["path"])
+        all_files['label'] = all_files["path"].apply(self.labelFromMap)
+
+        X, y = all_files["path"], all_files["label"]
+        trainX = X.sample(frac=self.train_pct)
+        trainy = y.sample(frac=self.train_pct)
+        testX = self.loadAndAugment(X.drop(trainX.index))
+        trainX = self.loadAndAugment(trainX)
+        testy = y.drop(trainy.index)
+
+        print("Done loading data")
+        return (
+                    trainX,
+                    trainy.to_numpy(dtype="float64"),
+                    testX,
+                    testy.to_numpy(dtype="float64"),
+                )
+

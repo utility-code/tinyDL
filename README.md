@@ -4,8 +4,12 @@
 - [DOCUMENTATION](https://subhadityamukherjee.github.io/tinyDL/)
 - Check the demo.py or the demo notebook!!! (same content)
 - Have a look at what works so far :)
-- New features will be added as time goes
 - Only needs numpy and pycuda for the library
+
+## Contributions
+- Do check the todo.md for stuff you can work on :)
+- Welcome! Add an issue if you have something you want to look at
+- PRs welcome
 
 ## Requirements
 - numpy
@@ -49,4 +53,6 @@
 - [albumentations](https://albumentations.ai/docs/api_reference/)
 - [conv](https://medium.com/analytics-vidhya/2d-convolution-using-python-numpy-43442ff5f381)
 - [optim](https://github.com/ilguyi/optimizers.numpy/blob/master/02.stochastic.gradient.descent.ipynb)
+- [loss](https://github.com/Nico-Curti/NumPyNet/blob/master/NumPyNet/metrics.py)
+- [loss2](https://github.com/ddbourgin/numpy-ml/blob/master/numpy_ml/neural_nets/losses/losses.py#L514-L924)
 - Countless stackoverflow searches (hehe)

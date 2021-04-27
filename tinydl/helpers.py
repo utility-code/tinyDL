@@ -2,6 +2,7 @@ import numpy as np
 import os
 from config import *
 import pickle
+from tinydl.tensor import Tensor
 
 """
 This module has some extra features that would be nice to have but are not strictly deep learning related
@@ -18,18 +19,18 @@ def pbar(
     fill="█",
     printEnd="\r",
 ):
-    """[summary]
+    """
     Args:
-        iterable ([type]): [description]
-        length (int, optional): [description]. Defaults to 50. Change if you have a big/small screen.
-        listofextra (list, optional): [description]. Defaults to []. Extra text
-        prefix (str, optional): [description]. Defaults to "".
-        suffix (str, optional): [description]. Defaults to "".
-        decimals (int, optional): [description]. Defaults to 1.
-        fill (str, optional): [description]. Defaults to "█". Change if you want a different block
-        printEnd (str, optional): [description]. Defaults to "\r".
+        iterable 
+        length (int, optional): . Defaults to 50. Change if you have a big/small screen.
+        listofextra (list, optional): . Defaults to []. Extra text
+        prefix (str, optional): . Defaults to "".
+        suffix (str, optional): . Defaults to "".
+        decimals (int, optional): . Defaults to 1.
+        fill (str, optional): . Defaults to "█". Change if you want a different block
+        printEnd (str, optional): . Defaults to "\r".
     Yields:
-        [type]: [description]
+        
     Custom progress bar.
     """
     total = len(iterable)
@@ -52,11 +53,11 @@ def pbar(
 
 
 def info(arr, n="", p=0):
-    """[summary]
+    """
     Args:
-        arr ([type]): [description]
-        n (str, optional): [description]. Defaults to "".
-        p (int, optional): [description]. Defaults to 0.
+        arr 
+        n (str, optional): . Defaults to "".
+        p (int, optional): . Defaults to 0.
     Give an array, get a description. Shape, count, mean etc.
     """
     print(f"name : {n}")
@@ -69,9 +70,9 @@ def info(arr, n="", p=0):
 
 
 def checkifdir(logdir=logdir):
-    """[summary]
+    """
     Args:
-        logdir ([type], optional): [description]. Defaults to logdir.
+        logdir . Defaults to logdir.
     Check if the directory exists
     """
     if not os.path.isdir(logdir):
@@ -79,21 +80,20 @@ def checkifdir(logdir=logdir):
 
 
 def getexpno(logdir=logdir):
-    """[summary]
+    """
     Args:
-        logdir ([type], optional): [description]. Defaults to logdir.
+        logdir . Defaults to logdir.
     Returns:
-        [type]: [description]
     Return the current experiment number
     """
     return len(os.listdir(logdir))  # Offset by 1 because of .gitkeep
 
 
 def savemodel(model, total_loss):
-    """[summary]
+    """
     Args:
-        model ([type]): [description]
-        total_loss ([type]): [description]
+        model 
+        total_loss 
     Save the model to a pickle file
     """
     with open("model.pkl", "wb+") as f:
@@ -104,3 +104,37 @@ def savemodel(model, total_loss):
             },
             f,
         )
+
+
+def loadmodel():
+    """
+    Args:
+        None
+    Loads the saved model from a pickle file
+    """
+    with open("model.pkl", "rb+") as f:
+        te = pickle.load(f)
+        return te
+
+def tensorToArray(arr):
+    """
+    Args:
+        tensor
+    Takes an array of Tensors and returns a numpy array
+    """
+    try:
+        return np.array([x.data for x in arr])
+    except AttributeError:
+        return np.array([x.data for x in np.array(arr)])
+
+def arrayToTensor(arr):
+    """
+    Args:
+        Array
+    Takes an array of Tensors and returns a numpy array
+    """
+    try:
+        return [Tensor(x) for x in arr]
+    except AttributeError:
+        return [Tensor(x) for x in np.array(arr)]
+

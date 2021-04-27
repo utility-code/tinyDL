@@ -6,10 +6,10 @@ from .layers import Linear, Node
 
 
 class Model(metaclass=ABCMeta):
-    """[summary]
+    """
 
     Args:
-        metaclass ([type], optional): [description]. Defaults to ABCMeta.
+        metaclass . Defaults to ABCMeta.
     Creates a model with GPU support and backwards/forward prop
     """
 
@@ -47,7 +47,7 @@ class Model(metaclass=ABCMeta):
         return params
 
     def summary(self):
-        """[summary]
+        """
         Pretty print model anyone?
         """
         _modules = self.modules

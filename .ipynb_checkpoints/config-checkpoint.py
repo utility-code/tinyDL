@@ -1,5 +1,5 @@
 # TRAINING DETAILS
-numEpochs = 2
+numEpochs = 1
 batch_size = 1000
 learning_rate = 0.01
 accuracy_metric = "accuracy"
@@ -15,7 +15,6 @@ plotLoss = False
 
 # LOSS
 # MSE,
-
 lossFunction = "MSELoss"
 
 # OPTIMIZER

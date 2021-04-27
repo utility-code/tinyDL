@@ -8,14 +8,14 @@ import tinydl as td
 
 
 def GD(step, model, learning_rate, vw, vw2):
-    """[summary]
+    """
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step 
+        model 
+        learning_rate 
+        vw 
+        vw2 
     gradient descent optimizer
     """
     for p in model.parameters():
@@ -23,14 +23,14 @@ def GD(step, model, learning_rate, vw, vw2):
 
 
 def GDM(step, model, learning_rate, vw, vw2):
-    """[summary]
+    """
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step 
+        model 
+        learning_rate 
+        vw 
+        vw2 
     Gradient descent optimizer with momentum
 
     """
@@ -39,14 +39,14 @@ def GDM(step, model, learning_rate, vw, vw2):
 
 
 def NGD(step, model, learning_rate, vw, vw2):
-    """[summary]
+    """
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step 
+        model 
+        learning_rate 
+        vw 
+        vw2 
     gradient descent optimizer with Nesterov momentum
 
     """
@@ -55,14 +55,14 @@ def NGD(step, model, learning_rate, vw, vw2):
 
 
 def RMSProp(step, model, learning_rate, vw, vw2):
-    """[summary]
+    """
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step 
+        model 
+        learning_rate 
+        vw 
+        vw2 
     RMSProp Optimizer
     """
     for p in model.parameters():
@@ -71,14 +71,14 @@ def RMSProp(step, model, learning_rate, vw, vw2):
 
 
 def ADAM(step, model, learning_rate, vw, vw2):
-    """[summary]
+    """
 
     Args:
-        step ([type]): [description]
-        model ([type]): [description]
-        learning_rate ([type]): [description]
-        vw ([type]): [description]
-        vw2 ([type]): [description]
+        step 
+        model 
+        learning_rate 
+        vw 
+        vw2 
     ADAM Optimizer
     """
     for p in model.parameters():
@@ -103,12 +103,12 @@ dict_loss = {
 
 
 def train(X, y, model):
-    """[summary]
+    """
 
     Args:
-        X ([type]): [description]
-        y ([type]): [description]
-        model ([type]): [description]
+        X 
+        y 
+        model 
     Main training loop. Contains logging functions, somewhat of a mini batcher and loss/accuracy plotter.
     """
     lossHistory = []
@@ -121,6 +121,9 @@ def train(X, y, model):
         currtime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         exp_file.write(f"Experiment conducted on : {currtime}\n")
         exp_file.write("epoch,loss\n")
+
+    if (resumetrain == True) and (modelpath != None):
+        savedmo = loadmodel()
 
     for steps in pbar(range(numEpochs)):
         ri = np.random.permutation(X.shape[0])[:batch_size]
@@ -137,7 +140,13 @@ def train(X, y, model):
         lossHistory.append(total_loss.data)
 
         # accuracy
-        print("Train Accuracy ", getattr(td.loss, accuracy_metric)(y_pred_b, yb))
+        print("\nTrain Accuracy : ", getattr(td.loss, accuracy_metric)(yb, y_pred_b), "%")
+        # ADD CHECK FOR EMPTY FILE
+        if (steps == 0) and (resumetrain == True) and (modelpath != None):
+            savedmo = loadmodel()
+            total_loss = savedmo["loss"]
+            print(model.parameters)
+            model.parameters = savedmo["parameters"]  # doesnt work
 
         # backward
         model.init_backward()
@@ -150,6 +159,7 @@ def train(X, y, model):
 
         # Optimize
         dict_optim[optimizer](steps, model, learning_rate, vw, vw2)
+
         if steps % afterEvery == 0:
             savemodel(model, total_loss)
             print(f"\nloss {total_loss.data} ")
